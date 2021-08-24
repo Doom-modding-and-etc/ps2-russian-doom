@@ -30,6 +30,7 @@
 
 #include <stdint.h>
 
+#include "include/config.h"
 #include "include/aes_prng.h"
 #include "include/doomtype.h"
 #include "include/i_swap.h"

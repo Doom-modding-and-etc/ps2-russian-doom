@@ -18,21 +18,21 @@
 // DESCRIPTION:  the automap code
 //
 
-#include "deh_main.h"
-#include "z_zone.h"
-#include "doomdef.h"
-#include "st_stuff.h"
-#include "p_local.h"
-#include "w_wad.h"
-#include "m_cheat.h"
-#include "m_misc.h"
-#include "v_trans.h"
-#include "v_video.h"
-#include "doomstat.h"
-#include "rd_keybinds.h"
-#include "rd_lang.h"
-#include "am_map.h"
-#include "jn.h"
+#include "include/deh_main.h"
+#include "include/z_zone.h"
+#include "include/doomdef.h"
+#include "include/st_stuff.h"
+#include "include/p_local.h"
+#include "include/w_wad.h"
+#include "include/m_cheat.h"
+#include "include/m_misc.h"
+#include "include/v_trans.h"
+#include "include/v_video.h"
+#include "include/doomstat.h"
+#include "include/rd_keybinds.h"
+#include "include/rd_lang.h"
+#include "include/am_map.h"
+#include "include/jn.h"
 
 // For use if I do walls with outsides/insides
 #define REDS             176
