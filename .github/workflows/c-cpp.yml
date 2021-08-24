@@ -1,0 +1,39 @@
+name: Workflow
+
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ps2dev/ps2dev:latest
+    
+    name: Instalação dos apps de compilação
+    run: |
+     apk add build-base git zip
+   
+     name: Compilar o russian doom
+      run: |
+        make all 
+      name: Get short SHA
+      id: slug
+      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+
+       - name: Upload artifacts
+         if: ${{ success() }}
+         uses: actions/upload-artifact@v2
+         with:
+       - name: Doom-Russo-${{ steps.slug.outputs.sha8 }}
+         path: $(NAME) RUSSO.ELF
+
+     - name: Create release
+       if: github.ref == 'refs/heads/master'
+       uses: marvinpinto/action-automatic-releases@latest
+       with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        title: "Latest development build"
+        files: $(NAME) RUSSO.ELF
