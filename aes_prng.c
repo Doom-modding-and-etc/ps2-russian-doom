@@ -30,9 +30,9 @@
 
 #include <stdint.h>
 
-#include "aes_prng.h"
-#include "doomtype.h"
-#include "i_swap.h"
+#include "include/aes_prng.h"
+#include "include/doomtype.h"
+#include "include/i_swap.h"
 
 /*
  * Cryptographic API.
