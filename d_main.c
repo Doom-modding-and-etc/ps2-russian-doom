@@ -84,7 +84,17 @@
 // [Dasperal] d_name.h var definition
 // -----------------------------------------------------------------------------
 char* RD_Project_Name = PACKAGE_PREFIX, "Doom";
-char* RD_Project_String = PACKAGE_PREFIX, "Doom" BUILD_DOOM_VERSION;
+char* RD_Project_String = PACKAGE_PREFIX, "Doom" BUILD_DOOM_VERSION
+
+switch (PACKAGE_PREFIX("Doom")
+{
+   case: RD_Project_Name
+ {
+    
+ };
+
+};
+
 GameType_t RD_GameType = gt_Doom;
 
 // -----------------------------------------------------------------------------
