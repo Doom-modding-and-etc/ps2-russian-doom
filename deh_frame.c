@@ -21,14 +21,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "doomtype.h"
-#include "d_items.h"
-#include "info.h"
+#include "include/doomtype.h"
+#include "include/d_items.h"
+#include "include/info.h"
 
-#include "deh_defs.h"
-#include "deh_io.h"
-#include "deh_main.h"
-#include "deh_mapping.h"
+#include "include/deh_defs.h"
+#include "include/deh_io.h"
+#include "include/deh_main.h"
+#include "include/deh_mapping.h"
 
 DEH_BEGIN_MAPPING(state_mapping, state_t)
   DEH_MAPPING("Sprite number",    sprite)

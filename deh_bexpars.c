@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "deh_io.h"
+#include "include/deh_io.h"
 
 int bex_pars[4][10] = {{0}};
 int bex_cpars[32] = {0};

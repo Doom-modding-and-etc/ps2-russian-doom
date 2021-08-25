@@ -23,9 +23,9 @@
 
 #include "SDL.h"
 
-#include "doomtype.h"
+#include "include/doomtype.h"
 
-#include "i_cdmus.h"
+#include "include/i_cdmus.h"
 
 int cd_Error;
 

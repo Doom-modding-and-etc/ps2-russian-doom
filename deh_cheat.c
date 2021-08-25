@@ -21,13 +21,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomtype.h"
+#include "include/doomtype.h"
 
-#include "deh_defs.h"
-#include "deh_io.h"
-#include "deh_main.h"
-#include "am_map.h"
-#include "st_stuff.h"
+#include "include/deh_defs.h"
+#include "include/deh_io.h"
+#include "include/deh_main.h"
+#include "include/am_map.h"
+#include "include/st_stuff.h"
 
 typedef struct 
 {

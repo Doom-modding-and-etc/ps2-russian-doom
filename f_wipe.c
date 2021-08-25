@@ -21,18 +21,18 @@
 #include <stdlib.h>     // [JN] rand()
 #include <string.h>
 
-#include "z_zone.h"
-#include "i_video.h"
-#include "v_video.h"
-#include "m_random.h"
-#include "doomtype.h"
-#include "f_wipe.h"
-#include "d_mode.h"     // [JN] Jaguar Doom: gamemission
-#include "w_wad.h"      // [JN] Jaguar Doom: W_CacheLumpName
-#include "doomstat.h"   // [JN] Jaguar Doom: screenblocks
-#include "hu_stuff.h"
-#include "st_stuff.h"   // [JN] Jaguar Doom: Status bar widgets
-#include "jn.h"         // [JN] Jaguar Doom: english_language
+#include "include/z_zone.h"
+#include "include/i_video.h"
+#include "include/v_video.h"
+#include "include/m_random.h"
+#include "include/doomtype.h"
+#include "include/f_wipe.h"
+#include "include/d_mode.h"     // [JN] Jaguar Doom: gamemission
+#include "include/w_wad.h"      // [JN] Jaguar Doom: W_CacheLumpName
+#include "include/doomstat.h"   // [JN] Jaguar Doom: screenblocks
+#include "include/hu_stuff.h"
+#include "include/st_stuff.h"   // [JN] Jaguar Doom: Status bar widgets
+#include "include/jn.h"         // [JN] Jaguar Doom: english_language
 
 
 extern char *DEH_String(char *s);

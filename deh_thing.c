@@ -21,12 +21,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "doomtype.h"
-#include "deh_defs.h"
-#include "deh_main.h"
-#include "deh_mapping.h"
-#include "info.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/deh_defs.h"
+#include "include/deh_main.h"
+#include "include/deh_mapping.h"
+#include "include/info.h"
+#include "include/jn.h"
 
 DEH_BEGIN_MAPPING(thing_mapping, mobjinfo_t)
   DEH_MAPPING("ID #",                doomednum)

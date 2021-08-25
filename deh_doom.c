@@ -19,8 +19,8 @@
 
 
 #include <stdlib.h>
-#include "deh_defs.h"
-#include "deh_main.h"
+#include "include/deh_defs.h"
+#include "include/deh_main.h"
 
 char *deh_signatures[] =
 {

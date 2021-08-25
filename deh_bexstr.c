@@ -22,11 +22,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "deh_defs.h"
-#include "deh_io.h"
-#include "deh_main.h"
+#include "include/deh_defs.h"
+#include "include/deh_io.h"
+#include "include/deh_main.h"
 
-#include "rd_lang.h"
+#include "include/rd_lang.h"
 
 typedef struct {
     char *macro;

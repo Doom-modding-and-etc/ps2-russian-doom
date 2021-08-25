@@ -22,13 +22,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomtype.h"
+#include "include/doomtype.h"
 
-#include "d_items.h"
+#include "include/d_items.h"
 
-#include "deh_defs.h"
-#include "deh_main.h"
-#include "deh_mapping.h"
+#include "include/deh_defs.h"
+#include "include/deh_main.h"
+#include "include/deh_mapping.h"
 
 DEH_BEGIN_MAPPING(weapon_mapping, weaponinfo_t)
   DEH_MAPPING("Ammo type",        ammo)

@@ -21,22 +21,22 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include "deh_main.h"
-#include "i_system.h"
-#include "i_swap.h"
-#include "z_zone.h"
-#include "v_video.h"
-#include "w_wad.h"
-#include "s_sound.h"
-#include "d_main.h"
-#include "rd_lang.h"
-#include "sounds.h"
-#include "doomstat.h"
-#include "r_state.h"
-#include "r_main.h"
-#include "hu_stuff.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/deh_main.h"
+#include "include/i_system.h"
+#include "include/i_swap.h"
+#include "include/z_zone.h"
+#include "include/v_video.h"
+#include "include/w_wad.h"
+#include "include/s_sound.h"
+#include "include/d_main.h"
+#include "include/rd_lang.h"
+#include "include/sounds.h"
+#include "include/doomstat.h"
+#include "include/r_state.h"
+#include "include/r_main.h"
+#include "include/hu_stuff.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 #define TEXTSPEED   3

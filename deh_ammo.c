@@ -22,12 +22,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomdef.h"
-#include "doomtype.h"
-#include "deh_defs.h"
-#include "deh_io.h"
-#include "deh_main.h"
-#include "p_local.h"
+#include "include/doomdef.h"
+#include "include/doomtype.h"
+#include "include/deh_defs.h"
+#include "include/deh_io.h"
+#include "include/deh_main.h"
+#include "include/p_local.h"
 
 static void *DEH_AmmoStart(deh_context_t *context, char *line)
 {

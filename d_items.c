@@ -17,8 +17,8 @@
 //
 
 
-#include "info.h"
-#include "d_items.h"
+#include "include/info.h"
+#include "include/d_items.h"
 
 
 //

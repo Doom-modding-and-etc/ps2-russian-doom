@@ -23,11 +23,11 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "doomtype.h"
-#include "deh_str.h"
-#include "m_misc.h"
-#include "z_zone.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/deh_str.h"
+#include "include/m_misc.h"
+#include "include/z_zone.h"
+#include "include/jn.h"
 
 typedef struct 
 {

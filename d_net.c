@@ -22,22 +22,22 @@
 
 #include <stdlib.h>
 
-#include "doomfeatures.h"
-#include "d_main.h"
-#include "m_argv.h"
-#include "m_menu.h"
-#include "m_misc.h"
-#include "i_system.h"
-#include "i_timer.h"
-#include "i_video.h"
-#include "g_game.h"
-#include "doomdef.h"
-#include "doomstat.h"
-#include "w_checksum.h"
-#include "w_wad.h"
-#include "deh_main.h"
-#include "d_loop.h"
-#include "jn.h"
+#include "include/doomfeatures.h"
+#include "include/d_main.h"
+#include "include/m_argv.h"
+#include "include/m_menu.h"
+#include "include/m_misc.h"
+#include "include/i_system.h"
+#include "include/i_timer.h"
+#include "include/i_video.h"
+#include "include/g_game.h"
+#include "include/doomdef.h"
+#include "include/doomstat.h"
+#include "include/w_checksum.h"
+#include "include/w_wad.h"
+#include "include/deh_main.h"
+#include "include/d_loop.h"
+#include "include/jn.h"
 
 
 ticcmd_t *netcmds;

@@ -24,12 +24,12 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "m_misc.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "deh_defs.h"
-#include "deh_io.h"
-#include "jn.h"
+#include "include/m_misc.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
+#include "include/deh_defs.h"
+#include "include/deh_io.h"
+#include "include/jn.h"
 
 typedef enum
 {

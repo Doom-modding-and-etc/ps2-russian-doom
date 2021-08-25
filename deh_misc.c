@@ -21,11 +21,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomtype.h"
-#include "deh_defs.h"
-#include "deh_io.h"
-#include "deh_main.h"
-#include "deh_misc.h"
+#include "include/doomtype.h"
+#include "include/deh_defs.h"
+#include "include/deh_io.h"
+#include "include/deh_main.h"
+#include "include/deh_misc.h"
 
 // Dehacked: "Initial Health" 
 // This is the initial health a player has when starting anew.

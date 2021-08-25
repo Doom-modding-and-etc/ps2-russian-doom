@@ -22,12 +22,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomtype.h"
-#include "info.h"
-#include "deh_defs.h"
-#include "deh_io.h"
-#include "deh_main.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/info.h"
+#include "include/deh_defs.h"
+#include "include/deh_io.h"
+#include "include/deh_main.h"
+#include "include/jn.h"
 
 actionf_t codeptrs[NUMSTATES]; // [crispy] share with deh_bexptr.c
 

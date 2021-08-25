@@ -21,12 +21,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "doomfeatures.h"
-#include "doomtype.h"
-#include "deh_defs.h"
-#include "deh_main.h"
-#include "deh_mapping.h"
-#include "sounds.h"
+#include "include/doomfeatures.h"
+#include "include/doomtype.h"
+#include "include/deh_defs.h"
+#include "include/deh_main.h"
+#include "include/deh_mapping.h"
+#include "include/sounds.h"
 
 DEH_BEGIN_MAPPING(sound_mapping, sfxinfo_t)
     DEH_UNSUPPORTED_MAPPING("Offset")
