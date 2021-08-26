@@ -11,7 +11,7 @@ SUBVERSION = 0
 PATCHLEVEL = 1
 EXTRAVERSION = LUAN GAMEPLAY-DEV
 
-EE_LIB = libps2stuff.a = librussiandoom.a
+EE_LIB = librussiandoom.a
 
 EE_OBJS_DIR = aes_prng.o am_map.o d_event.o d_items.o\
 d_iwad.o d_loop.o d_mode.o d_net.o\
