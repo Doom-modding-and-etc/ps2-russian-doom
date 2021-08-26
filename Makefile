@@ -24,7 +24,7 @@ info.o m_argv.o m_bbox.o m_cheat.o m_cheat.o m_fixed.o\
 
 EE_LIBS = -lkernel -lcdvd -ldebug -ldraw 
 EE_LIBS_PORTS = -lpng -lpng16 -llua -lsdl
-all: $(EE_BIN)
+all: $(EE_LIB)
 
 clean:
 	rm -f $(EE_OBJS) $(EE_BIN)
