@@ -21,9 +21,8 @@ deh_ptr.c deh_sound.o deh_str.o deh_text.o deh_thing.o deh_weapon.o\
 doomstat.o f_finale.o f_wipe.o g_game.o gusconf.o hu_lib.o\
 info.o m_argv.o m_bbox.o m_cheat.o m_cheat.o m_fixed.o\
 
+WARNING_FLAGS = -Wno-strict-aliasing -Wno-conversion-null 
 
-EE_LIBS = -lkernel -lcdvd -ldebug -ldraw 
-EE_LIBS_PORTS = -lpng -lpng16 -llua -lsdl
 all: $(EE_LIB)
 
 clean:
