@@ -23,6 +23,14 @@ info.o m_argv.o m_bbox.o m_cheat.o m_cheat.o m_fixed.o\
 
 WARNING_FLAGS = -Wno-strict-aliasing -Wno-conversion-null 
 
+EE_LDFLAGS  += -L. -L$(PS2SDK)/ports/lib
+EE_INCS     += -I./include -I$(PS2SDK)/ports/include
+
+ifeq ($(DEBUG), 1)
+    EE_CFLAGS   += -D_DEBUG
+    EE_CXXFLAGS += -D_DEBUG
+endif
+
 all: $(EE_LIB)
 
 clean:
