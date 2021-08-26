@@ -20,15 +20,15 @@
 
 #include <ctype.h>
 
-#include "doomdef.h"
-#include "doomkeys.h"
-#include "v_video.h"
-#include "i_swap.h"
-#include "hu_lib.h"
-#include "hu_stuff.h"
-#include "r_local.h"
-#include "r_draw.h"
-#include "jn.h"
+#include "include/doomdef.h"
+#include "include/doomkeys.h"
+#include "include/v_video.h"
+#include "include/i_swap.h"
+#include "include/hu_lib.h"
+#include "include/hu_stuff.h"
+#include "include/r_local.h"
+#include "include/r_draw.h"
+#include "include/jn.h"
 
 // boolean : whether the screen is always erased
 #define noterased viewwindowx

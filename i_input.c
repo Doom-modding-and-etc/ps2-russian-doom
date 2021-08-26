@@ -22,12 +22,12 @@
 #include "SDL.h"
 #include "SDL_keycode.h"
 
-#include "doomkeys.h"
-#include "doomtype.h"
-#include "d_event.h"
-#include "i_input.h"
-#include "m_argv.h"
-#include "m_config.h"
+#include "include/doomkeys.h"
+#include "include/doomtype.h"
+#include "include/d_event.h"
+#include "include/i_input.h"
+#include "include/m_argv.h"
+#include "include/m_config.h"
 
 static const int scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
 

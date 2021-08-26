@@ -21,12 +21,12 @@
 #include "SDL.h"
 #include <stdio.h>
 
-#include "doomtype.h"
-#include "d_event.h"
-#include "i_controller.h"
-#include "i_system.h"
-#include "m_config.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/d_event.h"
+#include "include/i_controller.h"
+#include "include/i_system.h"
+#include "include/m_config.h"
+#include "include/jn.h"
 
 // When an axis is within the dead zone, it is set to zero.
 // This is 5% of the full range:

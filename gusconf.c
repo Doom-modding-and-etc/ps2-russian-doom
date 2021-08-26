@@ -28,11 +28,11 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "m_argv.h"
-#include "m_misc.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "jn.h"
+#include "include/m_argv.h"
+#include "include/m_misc.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
+#include "include/jn.h"
 
 #define MAX_INSTRUMENTS 256
 
