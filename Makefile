@@ -18,7 +18,8 @@ d_iwad.o d_loop.o d_mode.o d_net.o\
 deh_ammo.o deh_bexincl.o deh_cheat.o deh_doom.o\
 deh_frame.o deh_io.o deh_main.o deh_mapping.o deh_misc.o\
 deh_ptr.c deh_sound.o deh_str.o deh_text.o deh_thing.o deh_weapon.o\
-doomstat.o f_finale.o f_wipe.o g_game.o gusconf.o hu_lib.o
+doomstat.o f_finale.o f_wipe.o g_game.o gusconf.o hu_lib.o\
+info.o m_argv.o m_bbox.o m_cheat.o m_cheat.o m_fixed.o\
 
 
 EE_LIBS = -lkernel -lcdvd -ldebug -ldraw 

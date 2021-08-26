@@ -23,11 +23,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomtype.h"
-#include "i_system.h"
-#include "m_misc.h"
-#include "m_argv.h"  // haleyjd 20110212: warning fix
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
+#include "include/m_misc.h"
+#include "include/m_argv.h"  // haleyjd 20110212: warning fix
+#include "include/jn.h"
 
 int		myargc;
 char**		myargv;

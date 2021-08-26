@@ -21,30 +21,30 @@
 #include <ctype.h>
 #include <time.h>
 
-#include "doomdef.h"
-#include "doomkeys.h"
-#include "z_zone.h"
-#include "deh_main.h"
-#include "i_input.h"
-#include "i_swap.h"
-#include "i_video.h"
-#include "hu_stuff.h"
-#include "hu_lib.h"
-#include "m_misc.h"
-#include "rd_keybinds.h"
-#include "w_wad.h"
-#include "s_sound.h"
-#include "doomstat.h"
-#include "st_stuff.h" // [JN] ST_HEIGHT
-#include "v_trans.h"  // [JN] Crosshair coloring
-#include "v_video.h"  // [JN] V_DrawPatch
+#include "include/doomdef.h"
+#include "include/doomkeys.h"
+#include "include/z_zone.h"
+#include "include/deh_main.h"
+#include "include/i_input.h"
+#include "include/i_swap.h"
+#include "include/i_video.h"
+#include "include/hu_stuff.h"
+#include "include/hu_lib.h"
+#include "include/m_misc.h"
+#include "include/rd_keybinds.h"
+#include "include/w_wad.h"
+#include "include/s_sound.h"
+#include "include/doomstat.h"
+#include "include/st_stuff.h" // [JN] ST_HEIGHT
+#include "include/v_trans.h"  // [JN] Crosshair coloring
+#include "include/v_video.h"  // [JN] V_DrawPatch
 
 // Data.
-#include "rd_lang.h"
-#include "sounds.h"
+#include "include/rd_lang.h"
+#include "include/sounds.h"
 
-#include "crispy.h"
-#include "jn.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 //
