@@ -38,13 +38,16 @@ ifeq ($(DEBUG), 1)
     EE_CXXFLAGS += -D_DEBUG
 endif
 
-install: $(EE_LIB)
+all: $(EE_LIB)
 
-run:
-	ps2client execee host:$(EE_BIN)
+install: all
+	mkdir -p $(PS2SDK)/ports/include
+	mkdir -p $(PS2SDK)/ports/lib
+	cp -rf include/ $(PS2SDK)/ports/include	
+	cp -f  $(EE_LIB) $(PS2SDK)/ports/lib
 
-reset:
-	ps2client reset
+clean:
+	rm -f $(EE_OBJS_LIB) $(EE_OBJS) $(EE_BIN) $(EE_LIB)
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal

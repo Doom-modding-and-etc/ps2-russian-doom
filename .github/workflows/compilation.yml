@@ -20,4 +20,4 @@ jobs:
     
     - name: compilar
       run: |
-         make install
+         make all install 
