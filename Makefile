@@ -31,10 +31,7 @@ ifeq ($(DEBUG), 1)
     EE_CXXFLAGS += -D_DEBUG
 endif
 
-all: $(EE_LIB)
-
-clean:
-	rm -f $(EE_OBJS) $(EE_BIN)
+install: $(EE_LIB)
 
 run:
 	ps2client execee host:$(EE_BIN)
