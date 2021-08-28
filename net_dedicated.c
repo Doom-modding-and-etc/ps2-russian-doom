@@ -21,14 +21,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "doomtype.h"
-#include "i_system.h"
-#include "i_timer.h"
-#include "m_argv.h"
-#include "net_defs.h"
-#include "net_sdl.h"
-#include "net_server.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
+#include "include/i_timer.h"
+#include "include/m_argv.h"
+#include "include/net_defs.h"
+#include "include/net_sdl.h"
+#include "include/net_server.h"
+#include "include/jn.h"
 
 // 
 // People can become confused about how dedicated servers work.  Game

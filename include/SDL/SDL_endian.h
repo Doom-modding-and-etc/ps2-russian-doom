@@ -1,12 +1,15 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
   arising from the use of this software.
+
   Permission is granted to anyone to use this software for any purpose,
   including commercial applications, and to alter it and redistribute it
   freely, subject to the following restrictions:
+
   1. The origin of this software must not be misrepresented; you must not
      claim that you wrote the original software. If you use this software
      in a product, an acknowledgment in the product documentation would be
@@ -22,8 +25,8 @@
  *  Functions for reading and writing endian-specific values
  */
 
-#ifndef SDL_endian_h_
-#define SDL_endian_h_
+#ifndef _SDL_endian_h
+#define _SDL_endian_h
 
 #include "SDL_stdinc.h"
 
@@ -39,7 +42,7 @@
 #ifdef __linux__
 #include <endian.h>
 #define SDL_BYTEORDER  __BYTE_ORDER
-#else /* __linux__ */
+#else /* __linux __ */
 #if defined(__hppa__) || \
     defined(__m68k__) || defined(mc68000) || defined(_M_M68K) || \
     (defined(__MIPS__) && defined(__MISPEB__)) || \
@@ -49,7 +52,7 @@
 #else
 #define SDL_BYTEORDER   SDL_LIL_ENDIAN
 #endif
-#endif /* __linux__ */
+#endif /* __linux __ */
 #endif /* !SDL_BYTEORDER */
 
 
@@ -93,12 +96,6 @@ SDL_Swap16(Uint16 x)
   __asm__("rorw #8,%0": "=d"(x): "0"(x):"cc");
     return x;
 }
-#elif defined(__WATCOMC__) && defined(__386__)
-extern _inline Uint16 SDL_Swap16(Uint16);
-#pragma aux SDL_Swap16 = \
-  "xchg al, ah" \
-  parm   [ax]   \
-  modify [ax];
 #else
 SDL_FORCE_INLINE Uint16
 SDL_Swap16(Uint16 x)
@@ -139,21 +136,6 @@ SDL_Swap32(Uint32 x)
   __asm__("rorw #8,%0\n\tswap %0\n\trorw #8,%0": "=d"(x): "0"(x):"cc");
     return x;
 }
-#elif defined(__WATCOMC__) && defined(__386__)
-extern _inline Uint32 SDL_Swap32(Uint32);
-#ifndef __SW_3 /* 486+ */
-#pragma aux SDL_Swap32 = \
-  "bswap eax"  \
-  parm   [eax] \
-  modify [eax];
-#else  /* 386-only */
-#pragma aux SDL_Swap32 = \
-  "xchg al, ah"  \
-  "ror  eax, 16" \
-  "xchg al, ah"  \
-  parm   [eax]   \
-  modify [eax];
-#endif
 #else
 SDL_FORCE_INLINE Uint32
 SDL_Swap32(Uint32 x)
@@ -252,6 +234,6 @@ SDL_SwapFloat(float x)
 #endif
 #include "close_code.h"
 
-#endif /* SDL_endian_h_ */
+#endif /* _SDL_endian_h */
 
 /* vi: set ts=4 sw=4 expandtab: */

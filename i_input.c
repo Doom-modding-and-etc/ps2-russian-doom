@@ -19,8 +19,8 @@
 
 
 
-#include "SDL.h"
-#include "SDL_keycode.h"
+#include "include/SDL/SDL.h"
+#include "include/SDL/SDL_keycode.h"
 
 #include "include/doomkeys.h"
 #include "include/doomtype.h"

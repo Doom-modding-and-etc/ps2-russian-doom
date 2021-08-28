@@ -23,11 +23,11 @@
 #include <string.h>
 #include <assert.h>
 
-#include "i_system.h"
-#include "doomtype.h"
-#include "i_swap.h"
-#include "midifile.h"
-#include "jn.h"
+#include "include/i_system.h"
+#include "include/doomtype.h"
+#include "include/i_swap.h"
+#include "include/midifile.h"
+#include "include/jn.h"
 
 #define HEADER_CHUNK_ID "MThd"
 #define TRACK_CHUNK_ID  "MTrk"

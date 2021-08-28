@@ -1,12 +1,15 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2021 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
   arising from the use of this software.
+
   Permission is granted to anyone to use this software for any purpose,
   including commercial applications, and to alter it and redistribute it
   freely, subject to the following restrictions:
+
   1. The origin of this software must not be misrepresented; you must not
      claim that you wrote the original software. If you use this software
      in a product, an acknowledgment in the product documentation would be
@@ -16,9 +19,8 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-#ifndef SDL_config_minimal_h_
-#define SDL_config_minimal_h_
-#define SDL_config_h_
+#ifndef _SDL_config_minimal_h
+#define _SDL_config_minimal_h
 
 #include "SDL_platform.h"
 
@@ -61,9 +63,6 @@ typedef unsigned long uintptr_t;
 /* Enable the stub haptic driver (src/haptic/dummy/\*.c) */
 #define SDL_HAPTIC_DISABLED 1
 
-/* Enable the stub sensor driver (src/sensor/dummy/\*.c) */
-#define SDL_SENSOR_DISABLED 1
-
 /* Enable the stub shared object loader (src/loadso/dummy/\*.c) */
 #define SDL_LOADSO_DISABLED 1
 
@@ -79,4 +78,4 @@ typedef unsigned long uintptr_t;
 /* Enable the dummy filesystem driver (src/filesystem/dummy/\*.c) */
 #define SDL_FILESYSTEM_DUMMY  1
 
-#endif /* SDL_config_minimal_h_ */
+#endif /* _SDL_config_minimal_h */

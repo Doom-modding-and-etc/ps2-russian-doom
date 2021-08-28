@@ -18,7 +18,7 @@
 
 
 
-#include "SDL.h"
+#include "include/SDL/SDL.h"
 #include <stdio.h>
 
 #include "include/doomtype.h"

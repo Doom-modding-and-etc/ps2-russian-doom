@@ -21,11 +21,11 @@
 
 #include <stdio.h>
 
-#include "i_system.h"
-#include "net_defs.h"
-#include "net_io.h"
-#include "z_zone.h"
-#include "jn.h"
+#include "include/i_system.h"
+#include "include/net_defs.h"
+#include "include/net_io.h"
+#include "include/z_zone.h"
+#include "include/jn.h"
 
 #define MAX_MODULES 16
 

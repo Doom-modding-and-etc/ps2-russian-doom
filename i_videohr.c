@@ -19,11 +19,11 @@
 
 
 
-#include "SDL.h"
+#include "include/SDL/SDL.h"
 #include "string.h"
 
-#include "doomtype.h"
-#include "i_timer.h"
+#include "include/doomtype.h"
+#include "include/i_timer.h"
 
 // Palette fade-in takes two seconds
 

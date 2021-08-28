@@ -21,14 +21,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomtype.h"
-#include "d_mode.h"
-#include "i_timer.h"
-#include "net_common.h"
-#include "net_io.h"
-#include "net_packet.h"
-#include "net_structrw.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/d_mode.h"
+#include "include/i_timer.h"
+#include "include/net_common.h"
+#include "include/net_io.h"
+#include "include/net_packet.h"
+#include "include/net_structrw.h"
+#include "include/jn.h"
 
 // connections time out after 30 seconds
 

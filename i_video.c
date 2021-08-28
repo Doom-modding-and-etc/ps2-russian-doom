@@ -21,8 +21,8 @@
 
 #include <stdlib.h>
 
-#include "SDL.h"
-#include "SDL_opengl.h"
+#include "include/SDL/SDL.h"
+#include "include/SDL/SDL_opengl.h"
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN

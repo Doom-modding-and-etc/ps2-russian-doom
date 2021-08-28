@@ -6,10 +6,6 @@
 # Copyright 2021 Wolf3s and Wally modder
 #
 #
-VERSION = 0
-SUBVERSION = 0
-PATCHLEVEL = 1
-EXTRAVERSION = LUAN GAMEPLAY-DEV
 
 EE_LIB = librussiandoom.a
 
@@ -19,7 +15,11 @@ deh_ammo.o deh_bexincl.o deh_cheat.o deh_doom.o\
 deh_frame.o deh_io.o deh_main.o deh_mapping.o deh_misc.o\
 deh_ptr.c deh_sound.o deh_str.o deh_text.o deh_thing.o deh_weapon.o\
 doomstat.o f_finale.o f_wipe.o g_game.o gusconf.o hu_lib.o\
-info.o m_argv.o m_bbox.o m_cheat.o m_cheat.o m_fixed.o\
+info.o m_argv.o m_bbox.o m_cheat.o m_fixed.o i_cdmus.o i_controller.o\
+i_main.o i_pcsound.o i_sound.o i_system.o i_video.o i_videohr.o m_config.o\
+memio.o net_client.o net_common.o net_dedicated.o net_io.o net_loop.o net_packet.o\
+net_query.o net_server.o net_structrw.o
+
 
 WARNING_FLAGS = -Wno-strict-aliasing -Wno-conversion-null 
 

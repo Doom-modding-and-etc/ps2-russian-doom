@@ -21,12 +21,12 @@
 
 #include <stdio.h>
 
-#include "doomtype.h"
-#include "i_swap.h"
+#include "include/doomtype.h"
+#include "include/i_swap.h"
 
-#include "memio.h"
-#include "mus2mid.h"
-#include "jn.h"
+#include "include/memio.h"
+#include "include/mus2mid.h"
+#include "include/jn.h"
 
 #define NUM_CHANNELS 16
 

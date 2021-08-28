@@ -21,18 +21,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "SDL_mixer.h"
+#include "include/SDL/SDL_mixer.h"
 
-#include "config.h"
-#include "doomfeatures.h"
-#include "doomtype.h"
+#include "include/config.h"
+#include "include/doomfeatures.h"
+#include "include/doomtype.h"
 
-#include "gusconf.h"
-#include "i_sound.h"
-#include "i_video.h"
-#include "m_argv.h"
-#include "m_config.h"
-#include "m_misc.h"
+#include "include/gusconf.h"
+#include "include/i_sound.h"
+#include "include/i_video.h"
+#include "include/m_argv.h"
+#include "include/m_config.h"
+#include "include/m_misc.h"
 
 // Sound sample rate to use for digital output (Hz)
 

@@ -31,7 +31,7 @@
 #include "include/m_misc.h"
 #include "include/w_wad.h"
 #include "include/z_zone.h"
-#include "include/opl.h"
+#include "include/opl/opl.h"
 #include "include/midifile.h"
 #include "include/jn.h"
 

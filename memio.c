@@ -23,8 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "memio.h"
-#include "z_zone.h"
+#include "include/memio.h"
+#include "include/z_zone.h"
 
 
 extern int english_language;

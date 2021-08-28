@@ -20,29 +20,29 @@
 
 
 
-#include "config.h"
+#include "include/config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "SDL.h"
-#include "SDL_mixer.h"
+#include "include/SDL/SDL.h"
+#include "include/SDL/SDL_mixer.h"
 
 #ifdef HAVE_LIBSAMPLERATE
 #include <samplerate.h>
 #endif
 
-#include "deh_str.h"
-#include "i_sound.h"
-#include "i_system.h"
-#include "i_swap.h"
-#include "m_argv.h"
-#include "m_misc.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "doomtype.h"
-#include "jn.h"
+#include "include/deh_str.h"
+#include "include/i_sound.h"
+#include "include/i_system.h"
+#include "include/i_swap.h"
+#include "include/m_argv.h"
+#include "include/m_misc.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
+#include "include/doomtype.h"
+#include "include/jn.h"
 
 #define LOW_PASS_FILTER
 //#define DEBUG_DUMP_WAVS

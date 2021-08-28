@@ -21,13 +21,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "doomtype.h"
-#include "i_system.h"
-#include "m_misc.h"
-#include "net_defs.h"
-#include "net_loop.h"
-#include "net_packet.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
+#include "include/m_misc.h"
+#include "include/net_defs.h"
+#include "include/net_loop.h"
+#include "include/net_packet.h"
+#include "include/jn.h"
 
 #define MAX_QUEUE_SIZE 16
 

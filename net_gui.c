@@ -24,20 +24,20 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "config.h"
-#include "doomkeys.h"
-#include "d_name.h"
-#include "i_system.h"
-#include "i_timer.h"
-#include "i_video.h"
-#include "m_argv.h"
-#include "m_misc.h"
-#include "net_client.h"
-#include "net_gui.h"
-#include "net_query.h"
-#include "net_server.h"
-#include "textscreen.h"
-#include "jn.h"
+#include "include/config.h"
+#include "include/doomkeys.h"
+#include "include/d_name.h"
+#include "include/i_system.h"
+#include "include/i_timer.h"
+#include "include/i_video.h"
+#include "include/m_argv.h"
+#include "include/m_misc.h"
+#include "include/net_client.h"
+#include "include/net_gui.h"
+#include "include/net_query.h"
+#include "include/net_server.h"
+#include "include/textscreen/textscreen.h"
+#include "include/jn.h"
 
 // [Dasperal] Disable clang warnings for windows-1251 strings
 #pragma clang diagnostic push
@@ -82,15 +82,15 @@ static void OpenWaitDialog(void)
 
     window = TXT_NewWindow(english_language ?
                            "Waiting for game start..." :
-                           "Ћжидание запуска игры...");
+                           "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ...");
 
     TXT_AddWidget(window, TXT_NewLabel(english_language ?
                                        "\nPlease wait...\n\n" :
-                                       "\nЏожалуйста, подождите...\n\n"));
+                                       "\nпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ...\n\n"));
 
     cancel = TXT_NewWindowAction(KEY_ESCAPE, english_language ?
                                              "Cancel" :
-                                             "Ћтмена");
+                                             "пїЅпїЅпїЅпїЅпїЅпїЅ");
     TXT_SignalConnect(cancel, "pressed", EscapePressed, NULL);
 
     TXT_SetWindowAction(window, TXT_HORIZ_LEFT, cancel);
@@ -185,7 +185,7 @@ static void UpdateGUI(void)
     {
         M_snprintf(buf, sizeof(buf), english_language ?
                    " (+%i observer clients)" :
-                   " (+%i наблюдателей)",
+                   " (+%i пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)",
                    net_client_wait_data.num_drones);
         TXT_SetLabel(drone_label, buf);
     }
@@ -198,7 +198,7 @@ static void UpdateGUI(void)
     {
         startgame = TXT_NewWindowAction(' ', english_language ?
                                              "Start game" :
-                                             "Ќачать игру");
+                                             "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ");
         TXT_SignalConnect(startgame, "pressed", StartGame, NULL);
     }
     else
@@ -253,8 +253,8 @@ static void CheckMasterStatus(void)
         else
         {
             TXT_SetLabel(master_msg_label,
-            "‚аш сервер зарегистрирован на центральном сервере.\n"
-            "„ругие игроки смогут увидеть ваш сервер в режиме онлайн.");
+            "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.\n"
+            "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.");
         }
         
     }
@@ -271,9 +271,9 @@ static void CheckMasterStatus(void)
         else
         {
             TXT_SetLabel(master_msg_label,
-            "Ќе удалось зарегистрироваться на центральном сервере. ‚аш сервер\n"
-            "не будет доступен в режиме онлайн. Џроверьте настройки сетевого\n"
-            "оборудования и настройте форвардинг UDP порта 2342.");
+            "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ\n"
+            "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\n"
+            "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ UDP пїЅпїЅпїЅпїЅпїЅ 2342.");
         }
     }
 }
@@ -334,9 +334,9 @@ static void CheckSHA1Sums(void)
         }
         else
         {
-            printf("‚нимание: Љонтрольная сумма WAD-файла SHA1 не совпадает с серверной:\n");
-            PrintSHA1Digest("‹окальная", net_local_wad_sha1sum);
-            PrintSHA1Digest("‘ерверная", net_client_wait_data.wad_sha1sum);
+            printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ WAD-пїЅпїЅпїЅпїЅпїЅ SHA1 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ:\n");
+            PrintSHA1Digest("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", net_local_wad_sha1sum);
+            PrintSHA1Digest("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", net_client_wait_data.wad_sha1sum);
         }
     }
 
@@ -351,8 +351,8 @@ static void CheckSHA1Sums(void)
         }
         else
         {
-            printf("‚нимание: ‘мешивание данных Freedoom и не Freedoom\n");
-            printf("‹окальные: %i  ‘ерверные: %i\n", 
+            printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Freedoom пїЅ пїЅпїЅ Freedoom\n");
+            printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: %i  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: %i\n", 
                    net_local_is_freedoom, 
                    net_client_wait_data.is_freedoom);
         }
@@ -368,19 +368,19 @@ static void CheckSHA1Sums(void)
         }
         else
         {
-            printf("‚нимание: Љонтрольная сумма SHA1 блока Dehacked не совпадает с серверной:\n");
-            PrintSHA1Digest("‹окальная", net_local_deh_sha1sum);
-            PrintSHA1Digest("‘ерверная", net_client_wait_data.deh_sha1sum);
+            printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ SHA1 пїЅпїЅпїЅпїЅпїЅ Dehacked пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ:\n");
+            PrintSHA1Digest("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", net_local_deh_sha1sum);
+            PrintSHA1Digest("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", net_client_wait_data.deh_sha1sum);
         }
     }
 
     window = TXT_NewWindow(english_language ?
                            "WARNING!" :
-                           "‚Ќ€ЊЂЌ€…!"); // ВНИМАНИЕ!
+                           "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!"); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!
 
     cont_button = TXT_NewWindowAction(KEY_ENTER, english_language ?
                                                  "Continue" :
-                                                 "Џродолжить");
+                                                 "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
     TXT_SignalConnect(cont_button, "pressed", CloseWindow, window);
 
     TXT_SetWindowAction(window, TXT_HORIZ_LEFT, NULL);
@@ -405,9 +405,9 @@ static void CheckSHA1Sums(void)
             else
             {
                 TXT_AddWidget(window, TXT_NewLabel
-                ("‚ы используете данные IWAD Freedom, в то время как\n"
-                 "другие игроки используют официальный IWAD. “бедитесь,\n"
-                 "что играете на тех же игровых уровнях, что и другие игроки.\n"));
+                ("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ IWAD Freedom, пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ\n"
+                 "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ IWAD. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ,\n"
+                 "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.\n"));
             }
         }
         else
@@ -422,9 +422,9 @@ static void CheckSHA1Sums(void)
             else
             {
                 TXT_AddWidget(window, TXT_NewLabel
-                ("‚ы используете данные официального IWAD, в то время как\n"
-                 "другие игроки используют данные Freedoom. “бедитесь,\n"
-                 "что играете на тех же игровых уровнях, что и другие игроки.\n"));
+                ("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ IWAD, пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ\n"
+                 "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Freedoom. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ,\n"
+                 "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.\n"));
             }
         }
     }
@@ -440,9 +440,9 @@ static void CheckSHA1Sums(void)
         else
         {
             TXT_AddWidget(window, TXT_NewLabel
-            ("‘одежримое папки Ваших WAD-файлов не совпадает с содержимым\n"
-			 "папками папок у других игроков. “бедитесь, что используете\n"
-             "те же самые WAD-файлы.\n"));
+            ("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ WAD-пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\n"
+			 "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\n"
+             "пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ WAD-пїЅпїЅпїЅпїЅпїЅ.\n"));
         }
     }
 
@@ -458,15 +458,15 @@ static void CheckSHA1Sums(void)
         else
         {
             TXT_AddWidget(window, TXT_NewLabel
-            ("‘одержимое блока Dehacked не совпадает с содержимым у других\n"
-             "игроков. “бедитесь, что используете такой же блок Dehacked,\n"
-             "что и другие игроки.\n"));
+            ("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ Dehacked пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ\n"
+             "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ Dehacked,\n"
+             "пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.\n"));
         }
     }
 
     TXT_AddWidget(window, TXT_NewLabel (english_language ?
                   "If you continue, this may cause your game to desync." :
-                  "‚ случае продолжения могут возникнуть ошибки десинхронизации."));
+                  "пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ."));
 
     had_warning = true;
 }
@@ -514,7 +514,7 @@ void NET_WaitForLaunch(void)
     {
         fprintf(stderr, english_language ?
                 "Failed to initialize GUI\n" :
-                "Ошибка инициализации интерфейса\n");
+                "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\n");
         exit(-1);
     }
 
@@ -541,7 +541,7 @@ void NET_WaitForLaunch(void)
         {
             I_Error(english_language ?
                     "Lost connection to server" :
-                    "Соединение с сервером потеряно");
+                    "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
         }
 
         TXT_Sleep(100);

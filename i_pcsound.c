@@ -18,18 +18,18 @@
 
 
 
-#include "SDL.h"
+#include "include/SDL/SDL.h"
 #include <string.h>
 
-#include "doomtype.h"
+#include "include/doomtype.h"
 
-#include "deh_str.h"
-#include "i_sound.h"
-#include "m_misc.h"
-#include "w_wad.h"
-#include "z_zone.h"
+#include "include/deh_str.h"
+#include "include/i_sound.h"
+#include "include/m_misc.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
 
-#include "pcsound.h"
+#include "include/pcsound/pcsound.h"
 
 #define TIMER_FREQ 1193181 /* hz */
 

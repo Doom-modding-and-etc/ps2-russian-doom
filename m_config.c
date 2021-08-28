@@ -26,18 +26,18 @@
 #include <ctype.h>
 #include <assert.h>
 
-#include "SDL_filesystem.h"
+#include "include/SDL/SDL_filesystem.h"
 
-#include "config.h"
-#include "doomtype.h"
-#include "doomfeatures.h"
-#include "i_system.h"
-#include "m_argv.h"
-#include "m_misc.h"
-#include "jn.h"
+#include "include/config.h"
+#include "include/doomtype.h"
+#include "include/doomfeatures.h"
+#include "include/i_system.h"
+#include "include/m_argv.h"
+#include "include/m_misc.h"
+#include "include/jn.h"
 
 #ifndef ___RD_TARGET_SETUP___
-    #include "rd_keybinds.h"
+    #include "include/rd_keybinds.h"
 #endif
 
 //
