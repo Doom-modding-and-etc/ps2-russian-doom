@@ -24,7 +24,7 @@ p_plats.o p_pspr.o p_saveg.o p_sight.o p_spec.o p_switch.o p_telept.o\
 p_tick.o p_user.o r_bmaps.o r_bsp.o r_draw.o r_main.o r_plane.o r_segs.o\
 rd_keybinds.o rd_lang.o rd_menu.o s_sound.o sound.o tables.o v_diskicon.o\
 v_trans.o w_checksum.o w_file_posix.o w_file_stdc.o w_file_win32.o w_file.o\
-w_main.o w_merge.o z_native.o z_zone.o
+w_main.o w_merge.o z_native.o z_zone.o gfx_ps2_rapi.o\
 
 
 
