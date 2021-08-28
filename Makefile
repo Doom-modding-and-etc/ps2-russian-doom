@@ -7,7 +7,7 @@
 #
 #
 
-EE_LIB = librussiandoom.a
+EE_LIB = russiandoom.a
 
 EE_OBJS_DIR = aes_prng.o am_map.o d_event.o d_items.o\
 d_iwad.o d_loop.o d_mode.o d_net.o\
