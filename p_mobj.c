@@ -19,17 +19,17 @@
 
 
 #include <stdio.h>
-#include "i_system.h"
-#include "z_zone.h"
-#include "m_random.h"
-#include "p_local.h"
-#include "st_stuff.h"
-#include "hu_stuff.h"
-#include "s_sound.h"
-#include "doomstat.h"
-#include "f_finale.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/i_system.h"
+#include "include/z_zone.h"
+#include "include/m_random.h"
+#include "include/p_local.h"
+#include "include/st_stuff.h"
+#include "include/hu_stuff.h"
+#include "include/s_sound.h"
+#include "include/doomstat.h"
+#include "include/f_finale.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 #define MOBJ_CYCLE_LIMIT 1000000

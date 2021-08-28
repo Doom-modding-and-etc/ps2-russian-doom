@@ -18,11 +18,11 @@
 //
 
 
-#include "z_zone.h"
-#include "p_local.h"
-#include "s_sound.h"
-#include "doomstat.h"
-#include "crispy.h"
+#include "include/z_zone.h"
+#include "include/p_local.h"
+#include "include/s_sound.h"
+#include "include/doomstat.h"
+#include "include/crispy.h"
 
 
 // =============================================================================

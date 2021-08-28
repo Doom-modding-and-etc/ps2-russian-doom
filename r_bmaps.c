@@ -16,11 +16,11 @@
 //
 
 
-#include "doomdef.h"
-#include "doomstat.h"
-#include "d_main.h"
-#include "r_bmaps.h"
-#include "jn.h"
+#include "include/doomdef.h"
+#include "include/doomstat.h"
+#include "include/d_main.h"
+#include "include/r_bmaps.h"
+#include "include/jn.h"
 
 
 // Floors and ceilings:

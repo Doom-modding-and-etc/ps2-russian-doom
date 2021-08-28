@@ -18,14 +18,14 @@
 //
 
 
-#include "doomdef.h"
-#include "doomstat.h"
-#include "s_sound.h"
-#include "p_local.h"
-#include "sounds.h"
-#include "r_state.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/doomdef.h"
+#include "include/doomstat.h"
+#include "include/s_sound.h"
+#include "include/p_local.h"
+#include "include/sounds.h"
+#include "include/r_state.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 // =============================================================================

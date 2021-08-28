@@ -28,6 +28,7 @@
 #include "include/i_swap.h"
 #include "include/midifile.h"
 #include "include/jn.h"
+#include "include/SDL/SDL_endian.h"
 
 #define HEADER_CHUNK_ID "MThd"
 #define TRACK_CHUNK_ID  "MTrk"

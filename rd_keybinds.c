@@ -16,15 +16,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "rd_keybinds.h"
-#include "d_name.h"
-#include "doomkeys.h"
-#include "i_controller.h"
-#include "i_input.h"
-#include "i_video.h"
-#include "jn.h"
-#include "m_misc.h"
-#include "rd_menu.h"
+#include "include/rd_keybinds.h"
+#include "include/d_name.h"
+#include "include/doomkeys.h"
+#include "include/i_controller.h"
+#include "include/i_input.h"
+#include "include/i_video.h"
+#include "include/jn.h"
+#include "include/m_misc.h"
+#include "include/rd_menu.h"
 
 typedef enum
 {

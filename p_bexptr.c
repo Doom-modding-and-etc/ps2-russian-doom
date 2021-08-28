@@ -18,9 +18,9 @@
 //	[crispy] additional BOOM and MBF code pointers
 //
 
-#include "p_local.h"
-#include "m_random.h"
-#include "s_sound.h"
+#include "include/p_local.h"
+#include "include/m_random.h"
+#include "include/s_sound.h"
 
 extern void A_Explode();
 extern void A_FaceTarget();

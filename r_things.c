@@ -24,18 +24,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "deh_main.h"
-#include "doomdef.h"
-#include "i_swap.h"
-#include "i_system.h"
-#include "z_zone.h"
-#include "w_wad.h"
-#include "r_local.h"
-#include "doomstat.h"
-#include "g_game.h"
-#include "v_trans.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/deh_main.h"
+#include "include/doomdef.h"
+#include "include/i_swap.h"
+#include "include/i_system.h"
+#include "include/z_zone.h"
+#include "include/w_wad.h"
+#include "include/r_local.h"
+#include "include/doomstat.h"
+#include "include/g_game.h"
+#include "include/v_trans.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 #define MINZ        (FRACUNIT*4)

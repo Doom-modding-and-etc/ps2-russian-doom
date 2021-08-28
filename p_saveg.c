@@ -22,20 +22,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "rd_lang.h"
-#include "deh_main.h"
-#include "i_system.h"
-#include "z_zone.h"
-#include "p_local.h"
-#include "p_saveg.h"
+#include "include/rd_lang.h"
+#include "include/deh_main.h"
+#include "include/i_system.h"
+#include "include/z_zone.h"
+#include "include/p_local.h"
+#include "include/p_saveg.h"
 
 // State.
-#include "doomstat.h"
-#include "g_game.h"
-#include "m_misc.h"
-#include "r_state.h"
+#include "include/doomstat.h"
+#include "include/g_game.h"
+#include "include/m_misc.h"
+#include "include/r_state.h"
 
-#include "jn.h"
+#include "include/jn.h"
 
 FILE *save_stream;
 int savegamelength;

@@ -19,16 +19,16 @@
 
 
 #include <stdlib.h>
-#include "doomdef.h"
-#include "m_bbox.h"
-#include "i_system.h"
-#include "r_main.h"
-#include "r_plane.h"
-#include "r_things.h"
-#include "doomstat.h"
-#include "r_state.h"
-#include "r_bsp.h"
-#include "jn.h"
+#include "include/doomdef.h"
+#include "include/m_bbox.h"
+#include "include/i_system.h"
+#include "include/r_main.h"
+#include "include/r_plane.h"
+#include "include/r_things.h"
+#include "include/doomstat.h"
+#include "include/r_state.h"
+#include "include/r_bsp.h"
+#include "include/jn.h"
 
 
 seg_t     *curline;

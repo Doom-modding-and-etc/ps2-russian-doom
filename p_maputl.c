@@ -23,13 +23,13 @@
 
 
 #include <stdlib.h>
-#include "m_bbox.h"
-#include "doomdef.h"
-#include "doomstat.h"
-#include "p_local.h"
-#include "r_state.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/m_bbox.h"
+#include "include/doomdef.h"
+#include "include/doomstat.h"
+#include "include/p_local.h"
+#include "include/r_state.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 // -----------------------------------------------------------------------------

@@ -12,14 +12,14 @@
 // GNU General Public License for more details.
 //
 
-#include "rd_text.h"
+#include "include/rd_text.h"
 
-#include "d_name.h"
-#include "i_swap.h"
-#include "v_patch.h"
-#include "v_video.h"
-#include "w_wad.h"
-#include "z_zone.h"
+#include "include/d_name.h"
+#include "include/i_swap.h"
+#include "include/v_patch.h"
+#include "include/v_video.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
 
 Translation_CR_t messages_pickup_color_set;
 Translation_CR_t messages_secret_color_set;

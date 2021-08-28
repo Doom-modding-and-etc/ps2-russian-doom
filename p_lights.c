@@ -19,11 +19,11 @@
 //
 
 
-#include "z_zone.h"
-#include "m_random.h"
-#include "p_local.h"
-#include "doomstat.h"
-#include "jn.h"
+#include "include/z_zone.h"
+#include "include/m_random.h"
+#include "include/p_local.h"
+#include "include/doomstat.h"
+#include "include/jn.h"
 
 
 // =============================================================================

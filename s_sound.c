@@ -21,28 +21,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "i_sound.h"
-#include "i_system.h"
+#include "include/i_sound.h"
+#include "include/i_system.h"
 
-#include "doomfeatures.h"
-#include "deh_str.h"
+#include "include/doomfeatures.h"
+#include "include/deh_str.h"
 
-#include "doomstat.h"
-#include "doomtype.h"
+#include "include/doomstat.h"
+#include "include/doomtype.h"
 
-#include "sounds.h"
-#include "s_sound.h"
+#include "include/sounds.h"
+#include "include/s_sound.h"
 
-#include "m_misc.h"
-#include "m_random.h"
-#include "m_argv.h"
+#include "include/m_misc.h"
+#include "include/m_random.h"
+#include "include/m_argv.h"
 
-#include "p_local.h"
-#include "w_wad.h"
-#include "z_zone.h"
+#include "include/p_local.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
 
-#include "crispy.h"
-#include "jn.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 // when to clip out sounds
 // Does not fit the large outdoor areas.

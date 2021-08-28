@@ -20,13 +20,13 @@
 //
 
 
-#include "doomdef.h"
-#include "d_event.h"
-#include "p_local.h"
-#include "doomstat.h"
-#include "g_game.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/doomdef.h"
+#include "include/d_event.h"
+#include "include/p_local.h"
+#include "include/doomstat.h"
+#include "include/g_game.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 #define INVERSECOLORMAP     32  // Index of the special effects (INVUL inverse) map.

@@ -21,27 +21,27 @@
 
 #include <stdio.h>
 
-#include "z_zone.h"
-#include "m_misc.h"
-#include "m_random.h"
-#include "deh_main.h"
-#include "i_swap.h"
-#include "i_system.h"
-#include "w_wad.h"
-#include "g_game.h"
-#include "r_local.h"
-#include "s_sound.h"
-#include "doomstat.h"
-#include "d_main.h"     // [JN] D_StartTitle
+#include "include/z_zone.h"
+#include "include/m_misc.h"
+#include "include/m_random.h"
+#include "include/deh_main.h"
+#include "include/i_swap.h"
+#include "include/i_system.h"
+#include "include/w_wad.h"
+#include "include/g_game.h"
+#include "include/r_local.h"
+#include "include/s_sound.h"
+#include "include/doomstat.h"
+#include "include/d_main.h"     // [JN] D_StartTitle
 
-#include "rd_text.h"
+#include "include/rd_text.h"
 // Needs access to LFB.
-#include "v_video.h"
-#include "st_stuff.h"
-#include "wi_stuff.h"
+#include "include/v_video.h"
+#include "include/st_stuff.h"
+#include "include/wi_stuff.h"
 
-#include "crispy.h"
-#include "jn.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 // [JN] Jaguar: prototypes
 void WI_drawStatsJaguar(void);

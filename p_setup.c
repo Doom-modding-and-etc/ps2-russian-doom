@@ -22,32 +22,32 @@
 
 #include <math.h>
 
-#include "z_zone.h"
+#include "include/z_zone.h"
 
-#include "deh_main.h"
-#include "i_swap.h"
-#include "m_argv.h"
-#include "m_bbox.h"
+#include "include/deh_main.h"
+#include "include/i_swap.h"
+#include "include/m_argv.h"
+#include "include/m_bbox.h"
 
-#include "g_game.h"
+#include "include/g_game.h"
 
-#include "i_system.h"
-#include "w_wad.h"
+#include "include/i_system.h"
+#include "include/w_wad.h"
 
-#include "doomdef.h"
-#include "p_local.h"
+#include "include/doomdef.h"
+#include "include/p_local.h"
 
-#include "s_sound.h"
+#include "include/s_sound.h"
 
-#include "doomstat.h"
+#include "include/doomstat.h"
 
-#include "m_menu.h" // [JN] detailLevel
-#include "crispy.h"
-#include "jn.h"
-#include "p_fix.h"
+#include "include/m_menu.h" // [JN] detailLevel
+#include "include/crispy.h"
+#include "include/jn.h"
+#include "include/p_fix.h"
 
 // [crispy] support maps with compressed ZDBSP nodes
-#include "config.h"
+#include "include/config.h"
 #ifdef HAVE_LIBZ
 #include <zlib.h>
 #endif

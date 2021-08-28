@@ -21,16 +21,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "i_system.h"
-#include "d_main.h"
-#include "doomdef.h"
-#include "doomstat.h"
-#include "r_local.h"
-#include "g_game.h"
-#include "r_segs.h"
-#include "r_bmaps.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/i_system.h"
+#include "include/d_main.h"
+#include "include/doomdef.h"
+#include "include/doomstat.h"
+#include "include/r_local.h"
+#include "include/g_game.h"
+#include "include/r_segs.h"
+#include "include/r_bmaps.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 int toptexture, bottomtexture, midtexture;

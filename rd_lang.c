@@ -13,9 +13,9 @@
 //
 
 
-#include "doomstat.h"
-#include "jn.h"
-#include "rd_lang.h"
+#include "include/doomstat.h"
+#include "include/jn.h"
+#include "include/rd_lang.h"
 
 
 // -----------------------------------------------------------------------------

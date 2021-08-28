@@ -20,14 +20,14 @@
 
 
 #include <stdio.h>
-#include "i_system.h"
-#include "deh_main.h"
-#include "p_local.h"
-#include "g_game.h"
-#include "s_sound.h"
-#include "doomstat.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/i_system.h"
+#include "include/deh_main.h"
+#include "include/p_local.h"
+#include "include/g_game.h"
+#include "include/s_sound.h"
+#include "include/doomstat.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 // =============================================================================

@@ -22,16 +22,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "i_system.h"
-#include "z_zone.h"
-#include "w_wad.h"
-#include "doomdef.h"
-#include "doomstat.h"
-#include "r_data.h"
-#include "r_local.h"
-#include "r_swirl.h"
-#include "r_bmaps.h"
-#include "jn.h"
+#include "include/i_system.h"
+#include "include/z_zone.h"
+#include "include/w_wad.h"
+#include "include/doomdef.h"
+#include "include/doomstat.h"
+#include "include/r_data.h"
+#include "include/r_local.h"
+#include "include/r_swirl.h"
+#include "include/r_bmaps.h"
+#include "include/jn.h"
 
 
 // -----------------------------------------------------------------------------

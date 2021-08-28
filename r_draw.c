@@ -20,16 +20,16 @@
 //
 
 
-#include "deh_main.h"
-#include "i_system.h"
-#include "z_zone.h"
-#include "w_wad.h"
-#include "r_local.h"
-#include "v_video.h"
-#include "v_trans.h"
-#include "doomstat.h"
-#include "m_random.h"
-#include "jn.h"
+#include "include/deh_main.h"
+#include "include/i_system.h"
+#include "include/z_zone.h"
+#include "include/w_wad.h"
+#include "include/r_local.h"
+#include "include/v_video.h"
+#include "include/v_trans.h"
+#include "include/doomstat.h"
+#include "include/m_random.h"
+#include "include/jn.h"
 
 
 // Status bar height at bottom of screen

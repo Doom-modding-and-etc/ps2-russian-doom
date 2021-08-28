@@ -22,17 +22,17 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include "doomdef.h"
-#include "doomstat.h" // [AM] leveltime, paused, menuactive
-#include "d_loop.h"
-#include "m_bbox.h"
-#include "m_menu.h"
-#include "p_local.h"
-#include "r_local.h"
-#include "g_game.h"
-#include "z_zone.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/doomdef.h"
+#include "include/doomstat.h" // [AM] leveltime, paused, menuactive
+#include "include/d_loop.h"
+#include "include/m_bbox.h"
+#include "include/m_menu.h"
+#include "include/p_local.h"
+#include "include/r_local.h"
+#include "include/g_game.h"
+#include "include/z_zone.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 // Fineangles in the SCREENWIDTH wide window.

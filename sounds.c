@@ -22,8 +22,8 @@
 
 #include <stdlib.h>
 
-#include "doomtype.h"
-#include "sounds.h"
+#include "include/doomtype.h"
+#include "include/sounds.h"
 
 //
 // Information about all the music

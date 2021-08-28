@@ -18,11 +18,11 @@
 //
 
 
-#include "doomdef.h"
-#include "i_system.h"
-#include "p_local.h"
-#include "r_state.h"
-#include "jn.h"
+#include "include/doomdef.h"
+#include "include/i_system.h"
+#include "include/p_local.h"
+#include "include/r_state.h"
+#include "include/jn.h"
 
 
 fixed_t   sightzstart;            // eye z of looker

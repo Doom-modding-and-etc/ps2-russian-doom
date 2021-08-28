@@ -18,24 +18,24 @@
 
 
 
-#include "z_zone.h"
-#include "doomdef.h"
-#include "deh_main.h"
-#include "p_local.h"
-#include "i_system.h"
+#include "include/z_zone.h"
+#include "include/doomdef.h"
+#include "include/deh_main.h"
+#include "include/p_local.h"
+#include "include/i_system.h"
 
-#include "s_sound.h"
+#include "include/s_sound.h"
 
 
 // State.
-#include "doomstat.h"
-#include "r_state.h"
+#include "include/doomstat.h"
+#include "include/r_state.h"
 
 // Data.
-#include "rd_lang.h"
-#include "sounds.h"
+#include "include/rd_lang.h"
+#include "include/sounds.h"
 
-#include "jn.h"
+#include "include/jn.h"
 
 
 //

@@ -20,8 +20,8 @@
 //
 
 
-#include "p_fix.h"
-#include "r_defs.h"
+#include "include/p_fix.h"
+#include "include/r_defs.h"
 
 
 vertexfix_t vertexfix[] =

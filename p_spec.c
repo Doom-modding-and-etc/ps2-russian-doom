@@ -23,21 +23,21 @@
 
 
 #include <stdlib.h>
-#include "doomstat.h"
-#include "deh_main.h"
-#include "i_system.h"
-#include "z_zone.h"
-#include "m_argv.h"
-#include "m_misc.h"
-#include "m_random.h"
-#include "w_wad.h"
-#include "p_local.h"
-#include "g_game.h"
-#include "s_sound.h"
-#include "rd_lang.h"
-#include "r_swirl.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/doomstat.h"
+#include "include/deh_main.h"
+#include "include/i_system.h"
+#include "include/z_zone.h"
+#include "include/m_argv.h"
+#include "include/m_misc.h"
+#include "include/m_random.h"
+#include "include/w_wad.h"
+#include "include/p_local.h"
+#include "include/g_game.h"
+#include "include/s_sound.h"
+#include "include/rd_lang.h"
+#include "include/r_swirl.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 // Animating textures and planes.

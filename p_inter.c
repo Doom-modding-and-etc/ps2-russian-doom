@@ -17,19 +17,19 @@
 //	Handling interactions (i.e., collisions).
 //
 
-#include "doomdef.h"
-#include "rd_lang.h"
-#include "sounds.h"
-#include "deh_main.h"
-#include "deh_misc.h"
-#include "doomstat.h"
-#include "m_random.h"
-#include "i_system.h"
-#include "am_map.h"
-#include "p_local.h"
-#include "s_sound.h"
-#include "crispy.h"
-#include "jn.h"
+#include "include/doomdef.h"
+#include "include/rd_lang.h"
+#include "include/sounds.h"
+#include "include/deh_main.h"
+#include "include/deh_misc.h"
+#include "include/doomstat.h"
+#include "include/m_random.h"
+#include "include/i_system.h"
+#include "include/am_map.h"
+#include "include/p_local.h"
+#include "include/s_sound.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 #define BONUSADD	6
