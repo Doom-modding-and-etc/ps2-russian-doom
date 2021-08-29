@@ -21,11 +21,11 @@
 
 #include <string.h>
 
-#include "doomtype.h"
-#include "i_system.h"
-#include "m_argv.h"
-#include "z_zone.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
+#include "include/m_argv.h"
+#include "include/z_zone.h"
+#include "include/jn.h"
 
 
 //

@@ -19,7 +19,7 @@
 
 
 
-#include "config.h"
+#include "include/config.h"
 
 #ifdef _WIN32
 

@@ -22,30 +22,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomfeatures.h"
+#include "include/doomfeatures.h"
 
-#include "d_event.h"
-#include "d_loop.h"
-#include "d_ticcmd.h"
-#include "d_mode.h"
+#include "include/d_event.h"
+#include "include/d_loop.h"
+#include "include/d_ticcmd.h"
+#include "include/d_mode.h"
 
-#include "i_system.h"
-#include "i_timer.h"
-#include "i_video.h"
+#include "include/i_system.h"
+#include "include/i_timer.h"
+#include "include/i_video.h"
 
-#include "m_argv.h"
-#include "m_fixed.h"
+#include "include/m_argv.h"
+#include "include/m_fixed.h"
 
-#include "net_client.h"
-#include "net_gui.h"
-#include "net_io.h"
-#include "net_query.h"
-#include "net_server.h"
-#include "net_sdl.h"
-#include "net_loop.h"
+#include "include/net_client.h"
+#include "include/net_gui.h"
+#include "include/net_io.h"
+#include "include/net_query.h"
+#include "include/net_server.h"
+#include "include/net_sdl.h"
+#include "include/net_loop.h"
 
-#include "crispy.h"
-#include "jn.h"
+#include "include/crispy.h"
+#include "include/jn.h"
 
 
 int uncapped_fps = 1;
@@ -858,8 +858,8 @@ void D_RegisterLoopCallbacks(loop_interface_t *i)
 }
 
 // TODO: Move nonvanilla demo functions into a dedicated file.
-#include "m_misc.h"
-#include "w_wad.h"
+#include "include/m_misc.h"
+#include "include/w_wad.h"
 
 static boolean StrictDemos(void)
 {

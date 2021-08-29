@@ -2,7 +2,7 @@
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
 // Copyright(C) 2016-2021 Julian Nechaevsky
-//
+// Copyright(C) 2021 André Guilherme Mendes da luz bastos(Wolf3s)
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -19,15 +19,15 @@
 
 
 
-#include "SDL.h"
-#include "SDL_keycode.h"
+#include "include/SDL/SDL.h"
+#include "include/SDL/SDL_keycode.h"
 
-#include "doomkeys.h"
-#include "doomtype.h"
-#include "d_event.h"
-#include "i_input.h"
-#include "m_argv.h"
-#include "m_config.h"
+#include "include/doomkeys.h"
+#include "include/doomtype.h"
+#include "include/d_event.h"
+#include "include/i_input.h"
+#include "include/m_argv.h"
+#include "include/m_config.h"
 
 static const int scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
 
@@ -405,6 +405,7 @@ static void UpdateMouseButtonState(SDL_MouseButtonEvent *buttonEvent)
     D_PostEvent(&event);
 }
 
+//Essa parte foi consertada antes tava zoada logo terá o suporte para o controle do ps2 :)
 static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
 {
     // SDL2 distinguishes button events from mouse wheel events.
@@ -412,10 +413,12 @@ static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
     // SDL1
     event_t up, down;
     int button;
+    int y, x;
+    unsigned char direction;
 
-    if(wheel->y)
+    if(wheel > y)
     {
-        button = MOUSE_SCROLL_UP + (wheel->y > 0 ? wheel->direction : !wheel->direction);
+        button = MOUSE_SCROLL_UP + (wheel>y > 0 ? wheel>direction : !wheel>direction);
 
         // post a button down event
         down.type = ev_mouse_keydown;
@@ -430,9 +433,9 @@ static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
         D_PostEvent(&up);
     }
 
-    if(wheel->x)
+    if(wheel>x)
     {
-        button = MOUSE_SCROLL_RIGHT + (wheel->x > 0 ? wheel->direction : !wheel->direction);
+        button = MOUSE_SCROLL_RIGHT + (wheel>x > 0 ? wheel > direction : !wheel > direction);
 
         // post a button down event
         down.type = ev_mouse_keydown;

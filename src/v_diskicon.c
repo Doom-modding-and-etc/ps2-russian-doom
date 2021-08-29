@@ -18,13 +18,13 @@
 //
 
 
-#include "i_video.h"
-#include "m_argv.h"
-#include "v_video.h"
-#include "w_wad.h"
-#include "z_zone.h"
+#include "include/i_video.h"
+#include "include/m_argv.h"
+#include "include/v_video.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
 
-#include "v_diskicon.h"
+#include "include/v_diskicon.h"
 
 // [JN] Moved from d_main.c for hot swapping.
 int show_diskicon = 1;

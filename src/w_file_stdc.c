@@ -21,9 +21,9 @@
 
 #include <stdio.h>
 
-#include "m_misc.h"
-#include "w_file.h"
-#include "z_zone.h"
+#include "include/m_misc.h"
+#include "include/w_file.h"
+#include "include/z_zone.h"
 
 typedef struct
 {

@@ -24,11 +24,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "doomtype.h"
-#include "i_system.h"
-#include "m_misc.h"
-#include "deh_mapping.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
+#include "include/m_misc.h"
+#include "include/deh_mapping.h"
+#include "include/jn.h"
 
 static deh_mapping_entry_t *GetMappingEntryByName(deh_context_t *context,
                                                   deh_mapping_t *mapping,

@@ -21,10 +21,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "config.h"
-#include "doomtype.h"
-#include "i_video.h"
-#include "jn.h"
+#include "include/config.h"
+#include "include/doomtype.h"
+#include "include/i_video.h"
+#include "include/jn.h"
 #include "txt_main.h"
 
 #define ENDOOM_W 80

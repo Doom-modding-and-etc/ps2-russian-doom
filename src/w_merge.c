@@ -26,13 +26,13 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "doomtype.h"
-#include "i_system.h"
-#include "m_misc.h"
-#include "w_merge.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
+#include "include/m_misc.h"
+#include "include/w_merge.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
+#include "include/jn.h"
 
 typedef enum 
 { 

@@ -22,10 +22,10 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "doomtype.h"
-#include "m_misc.h"
-#include "net_packet.h"
-#include "net_structrw.h"
+#include "include/doomtype.h"
+#include "include/m_misc.h"
+#include "include/net_packet.h"
+#include "include/net_structrw.h"
 
 void NET_WriteConnectData(net_packet_t *packet, net_connect_data_t *data)
 {

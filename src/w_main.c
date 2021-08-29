@@ -19,17 +19,17 @@
 
 
 
-#include "config.h"
-#include "doomfeatures.h"
-#include "d_iwad.h"
-#include "i_system.h"
-#include "m_argv.h"
-#include "w_main.h"
-#include "w_merge.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "m_misc.h"
-#include "jn.h"
+#include "include/config.h"
+#include "include/doomfeatures.h"
+#include "include/d_iwad.h"
+#include "include/i_system.h"
+#include "include/m_argv.h"
+#include "include/w_main.h"
+#include "include/w_merge.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
+#include "include/m_misc.h"
+#include "include/jn.h"
 
 // Parse the command line, merging WAD files that are sppecified.
 // Returns true if at least one file was added.

@@ -13,19 +13,19 @@
 //
 
 #include <ctype.h>
-#include "rd_menu.h"
+#include "include/rd_menu.h"
 
-#include "deh_str.h"
-#include "d_name.h"
-#include "doomkeys.h"
-#include "i_video.h"
-#include "jn.h"
-#include "m_misc.h"
-#include "rd_keybinds.h"
-#include "v_patch.h"
-#include "v_video.h"
-#include "w_wad.h"
-#include "z_zone.h"
+#include "include/deh_str.h"
+#include "include/d_name.h"
+#include "include/doomkeys.h"
+#include "include/i_video.h"
+#include "include/jn.h"
+#include "include/m_misc.h"
+#include "include/rd_keybinds.h"
+#include "include/v_patch.h"
+#include "include/v_video.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
 
 static int item_Height;
 static int item_Height_Small;

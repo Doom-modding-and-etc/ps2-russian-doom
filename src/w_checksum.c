@@ -23,11 +23,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "i_system.h"
-#include "m_misc.h"
-#include "sha1.h"
-#include "w_checksum.h"
-#include "w_wad.h"
+#include "include/i_system.h"
+#include "include/m_misc.h"
+#include "include/sha1.h"
+#include "include/w_checksum.h"
+#include "include/w_wad.h"
 
 static wad_file_t **open_wadfiles = NULL;
 static int num_open_wadfiles = 0;

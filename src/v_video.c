@@ -26,21 +26,21 @@
 #include <string.h>
 #include <math.h>
 
-#include "i_system.h"
-#include "doomtype.h"
-#include "deh_str.h"
-#include "i_input.h"
-#include "i_swap.h"
-#include "i_video.h"
-#include "m_bbox.h"
-#include "m_misc.h"
-#include "v_video.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "v_trans.h"
-#include "jn.h"
+#include "include/i_system.h"
+#include "include/doomtype.h"
+#include "include/deh_str.h"
+#include "include/i_input.h"
+#include "include/i_swap.h"
+#include "include/i_video.h"
+#include "include/m_bbox.h"
+#include "include/m_misc.h"
+#include "include/v_video.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
+#include "include/v_trans.h"
+#include "include/jn.h"
 
-#include "config.h"
+#include "include/config.h"
 #ifdef HAVE_LIBPNG
 #include <png.h>
 #endif

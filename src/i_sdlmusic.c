@@ -24,27 +24,27 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "SDL.h"
-#include "SDL_mixer.h"
+#include "include/SDL/SDL.h"
+#include "include/SDL/SDL_mixer.h"
 
-#include "i_midipipe.h"
+#include "include/i_midipipe.h"
 
-#include "config.h"
-#include "doomtype.h"
-#include "memio.h"
-#include "mus2mid.h"
+#include "include/config.h"
+#include "include/doomtype.h"
+#include "include/memio.h"
+#include "include/mus2mid.h"
 
-#include "deh_str.h"
-#include "gusconf.h"
-#include "i_sound.h"
-#include "i_system.h"
-#include "i_swap.h"
-#include "m_argv.h"
-#include "m_config.h"
-#include "m_misc.h"
-#include "sha1.h"
-#include "w_wad.h"
-#include "z_zone.h"
+#include "include/deh_str.h"
+#include "include/gusconf.h"
+#include "include/i_sound.h"
+#include "include/i_system.h"
+#include "include/i_swap.h"
+#include "include/m_argv.h"
+#include "include/m_config.h"
+#include "include/m_misc.h"
+#include "include/sha1.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
 
 #define MAXMIDLENGTH (96 * 1024)
 

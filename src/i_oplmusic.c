@@ -23,17 +23,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "memio.h"
-#include "mus2mid.h"
-#include "deh_main.h"
-#include "i_sound.h"
-#include "i_swap.h"
-#include "m_misc.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "opl.h"
-#include "midifile.h"
-#include "jn.h"
+#include "include/memio.h"
+#include "include/mus2mid.h"
+#include "include/deh_main.h"
+#include "include/i_sound.h"
+#include "include/i_swap.h"
+#include "include/m_misc.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
+#include "include/opl/opl.h"
+#include "include/midifile.h"
+#include "include/jn.h"
 
 // #define OPL_MIDI_DEBUG
 

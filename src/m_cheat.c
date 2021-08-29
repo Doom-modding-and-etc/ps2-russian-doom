@@ -21,8 +21,8 @@
 
 #include <string.h>
 
-#include "doomtype.h"
-#include "m_cheat.h"
+#include "include/doomtype.h"
+#include "include/m_cheat.h"
 
 //
 // CHEAT SEQUENCE PACKAGE

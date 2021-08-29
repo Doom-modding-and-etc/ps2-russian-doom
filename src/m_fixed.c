@@ -21,10 +21,10 @@
 
 #include "stdlib.h"
 
-#include "doomtype.h"
-#include "i_system.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
 
-#include "m_fixed.h"
+#include "include/m_fixed.h"
 
 
 

@@ -33,21 +33,21 @@
 #include <unistd.h>
 #endif
 
-#include "SDL.h"
-#include "config.h"
-#include "deh_str.h"
-#include "doomtype.h"
-#include "d_name.h"
-#include "m_argv.h"
-#include "m_config.h"
-#include "m_misc.h"
-#include "i_sound.h"
-#include "i_timer.h"
-#include "i_video.h"
-#include "i_system.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "jn.h"
+#include "include/SDL/SDL.h"
+#include "include/config.h"
+#include "include/deh_str.h"
+#include "include/doomtype.h"
+#include "include/d_name.h"
+#include "include/m_argv.h"
+#include "include/m_config.h"
+#include "include/m_misc.h"
+#include "include/i_sound.h"
+#include "include/i_timer.h"
+#include "include/i_video.h"
+#include "include/i_system.h"
+#include "include/w_wad.h"
+#include "include/z_zone.h"
+#include "include/jn.h"
 
 // [JN] Объём необходимой памяти увеличен вдвое
 #define DEFAULT_RAM 16*2 /* MiB */

@@ -22,16 +22,16 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "doomtype.h"
-#include "i_system.h"
-#include "m_argv.h"
-#include "m_misc.h"
-#include "net_defs.h"
-#include "net_io.h"
-#include "net_packet.h"
-#include "net_sdl.h"
-#include "z_zone.h"
-#include "jn.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
+#include "include/m_argv.h"
+#include "include/m_misc.h"
+#include "include/net_defs.h"
+#include "include/net_io.h"
+#include "include/net_packet.h"
+#include "include/net_sdl.h"
+#include "include/z_zone.h"
+#include "include/jn.h"
 
 //
 // NETWORKING

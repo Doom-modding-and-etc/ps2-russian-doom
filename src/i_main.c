@@ -19,11 +19,11 @@
 
 
 
-#include "config.h"
+#include "include/config.h"
 
 #include <stdio.h>
 
-#include "SDL.h"
+#include "include/SDL/SDL.h"
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
@@ -32,10 +32,10 @@
 #include <windows.h>
 #endif
 
-#include "doomtype.h"
-#include "i_system.h"
-#include "m_argv.h"
-#include "m_misc.h"
+#include "include/doomtype.h"
+#include "include/i_system.h"
+#include "include/m_argv.h"
+#include "include/m_misc.h"
 
 // [JN] Vanilla game mode available for all three games in RD
 boolean vanillaparm;

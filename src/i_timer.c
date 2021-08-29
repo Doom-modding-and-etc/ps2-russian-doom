@@ -19,10 +19,10 @@
 
 
 
-#include "SDL.h"
+#include "include/SDL/SDL.h"
 
-#include "i_timer.h"
-#include "doomtype.h"
+#include "include/i_timer.h"
+#include "include/doomtype.h"
 
 //
 // I_GetTime
