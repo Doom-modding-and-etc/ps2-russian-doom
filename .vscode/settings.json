@@ -14,7 +14,12 @@
         "[0-9]*.model": "javascript",
         "[0-9]*.view": "javascript",
         "*.bms": "quickbms",
+        "deh_main.h": "c",
+        "string_view": "c",
+        "kernel.h": "c",
+        "string.h": "c",
         "jn.h": "c",
-        "m_misc.h": "c"
+        "m_misc.h": "c",
+        "doomtype.h": "c"
     }
 }
