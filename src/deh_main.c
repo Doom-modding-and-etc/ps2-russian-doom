@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,14 +23,14 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "include/doomtype.h"
-#include "include/i_system.h"
-#include "include/d_iwad.h"
-#include "include/m_argv.h"
-#include "include/w_wad.h"
-#include "include/deh_defs.h"
-#include "include/deh_io.h"
-#include "include/jn.h"
+#include "doomtype.h"
+#include "i_system.h"
+#include "d_iwad.h"
+#include "m_argv.h"
+#include "w_wad.h"
+#include "deh_defs.h"
+#include "deh_io.h"
+#include "jn.h"
 
 extern deh_section_t *deh_section_types[];
 extern char *deh_signatures[];

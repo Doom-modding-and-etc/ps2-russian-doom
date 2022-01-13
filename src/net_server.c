@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,25 +22,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/config.h"
-#include "include/doomtype.h"
-#include "include/d_name.h"
-#include "include/d_mode.h"
-#include "include/i_system.h"
-#include "include/i_timer.h"
-#include "include/m_argv.h"
-#include "include/m_misc.h"
-#include "include/net_client.h"
-#include "include/net_common.h"
-#include "include/net_defs.h"
-#include "include/net_io.h"
-#include "include/net_loop.h"
-#include "include/net_packet.h"
-#include "include/net_query.h"
-#include "include/net_server.h"
-#include "include/net_sdl.h"
-#include "include/net_structrw.h"
-#include "include/jn.h"
+#include "config.h"
+#include "doomtype.h"
+#include "d_name.h"
+#include "d_mode.h"
+#include "i_system.h"
+#include "i_timer.h"
+#include "m_argv.h"
+#include "m_misc.h"
+#include "net_client.h"
+#include "net_common.h"
+#include "net_defs.h"
+#include "net_io.h"
+#include "net_loop.h"
+#include "net_packet.h"
+#include "net_query.h"
+#include "net_server.h"
+#include "net_sdl.h"
+#include "net_structrw.h"
+#include "jn.h"
 
 // How often to refresh our registration with the master server.
 

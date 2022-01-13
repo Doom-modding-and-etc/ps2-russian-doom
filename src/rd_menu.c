@@ -1,5 +1,5 @@
 //
-// Copyright(C) 2021 Dasperal
+// Copyright(C) 2021-2022 Dasperal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,19 +13,19 @@
 //
 
 #include <ctype.h>
-#include "include/rd_menu.h"
+#include "rd_menu.h"
 
-#include "include/deh_str.h"
-#include "include/d_name.h"
-#include "include/doomkeys.h"
-#include "include/i_video.h"
-#include "include/jn.h"
-#include "include/m_misc.h"
-#include "include/rd_keybinds.h"
-#include "include/v_patch.h"
-#include "include/v_video.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
+#include "deh_str.h"
+#include "d_name.h"
+#include "doomkeys.h"
+#include "i_video.h"
+#include "jn.h"
+#include "m_misc.h"
+#include "rd_keybinds.h"
+#include "v_patch.h"
+#include "v_video.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
 static int item_Height;
 static int item_Height_Small;
@@ -280,7 +280,7 @@ inline void RD_Menu_ShiftSlideInt(int* var, int minValue, int maxValue, Directio
 }
 
 /** [Dasperal] y = menu->y + 2 + (item * ITEM_HEIGHT) */
-void RD_Menu_DrawSlider(Menu_t * menu, int y, int width, int value)
+void RD_Menu_DrawSlider(Menu_t* menu, int y, int width, int value)
 {
     int x;
     int x2;
@@ -304,13 +304,17 @@ void RD_Menu_DrawSlider(Menu_t * menu, int y, int width, int value)
 }
 
 /** [JN] Draw small slider*/
-void RD_Menu_DrawSliderSmall(Menu_t * menu, int y, int width, int value)
+void RD_Menu_DrawSliderSmall(Menu_t* menu, int y, int width, int value)
 {
-    int x;
+    RD_Menu_DrawSliderSmallInline(english_language ? menu->x_eng : menu->x_rus, y, width, value);
+}
+
+void RD_Menu_DrawSliderSmallInline(int x, int y, int width, int value)
+{
     int x2;
     int count;
 
-    x = (english_language ? menu->x_eng : menu->x_rus) + (RD_GameType == gt_Doom ? 8 : 24);
+    x += (RD_GameType == gt_Doom ? 8 : 24);
 
     drawShadowedPatch(x - (RD_GameType == gt_Doom ? 8 : 32) + wide_delta, y, W_CacheLumpNum(smallSlider_left_patch, PU_CACHE));
     for (x2 = x, count = width; count--; x2 += 8)

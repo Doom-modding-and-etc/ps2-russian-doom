@@ -1,5 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,8 +15,6 @@
 //
 // Text mode emulation in SDL
 //
-
-// Russian Doom (C) 2016-2018 Julian Nechaevsky
 
 
 #include "SDL.h"
@@ -57,7 +56,7 @@ typedef struct
 
 #define BLINK_PERIOD 250
 
-SDL_Window *TXT_SDLWindow;
+SDL_Window *TXT_SDLWindow = NULL;
 static SDL_Surface *screenbuffer;
 static unsigned char *screendata;
 static SDL_Renderer *renderer;
@@ -235,12 +234,15 @@ static void ChooseFont(void)
 // Returns 1 if successful, 0 if an error occurred
 //
 
-void TXT_PreInit(SDL_Window *preset_window,
-                 SDL_Renderer *preset_renderer)
+void TXT_PreInit(SDL_Window *preset_window, SDL_Renderer *preset_renderer)
 {
-    if (preset_window != NULL && preset_renderer != NULL)
+    if (preset_window != NULL)
     {
         TXT_SDLWindow = preset_window;
+    }
+
+    if (preset_renderer != NULL)
+    {
         renderer = preset_renderer;
     }
 }
@@ -273,21 +275,24 @@ int TXT_Init(int use_en_font, int use_small_font)
 
     if (TXT_SDLWindow == NULL)
     {
-    TXT_SDLWindow =
-        SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                         screen_image_w, screen_image_h, flags);
+        TXT_SDLWindow = SDL_CreateWindow("",
+                            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                            screen_image_w, screen_image_h, flags);
     }
 
     if (TXT_SDLWindow == NULL)
         return 0;
 
-    // Destroy the existing renderer, so we can create our own new one
-    if (renderer != NULL)
+    if (renderer == NULL)
     {
-        SDL_DestroyRenderer(renderer);
+        renderer = SDL_CreateRenderer(TXT_SDLWindow, -1, SDL_RENDERER_PRESENTVSYNC);
+
+        if (renderer == NULL)
+            renderer = SDL_CreateRenderer(TXT_SDLWindow, -1, SDL_RENDERER_SOFTWARE);
     }
 
-    renderer = SDL_CreateRenderer(TXT_SDLWindow, -1, SDL_RENDERER_SOFTWARE);
+    if (renderer == NULL)
+        return 0;
 
     // Special handling for OS X retina display. If we successfully set the
     // highdpi flag, check the output size for the screen renderer. If we get
@@ -328,6 +333,9 @@ int TXT_Init(int use_en_font, int use_small_font)
                                         TXT_SCREEN_W * font->w,
                                         TXT_SCREEN_H * font->h,
                                         8, 0, 0, 0, 0);
+
+    // Set width and height of the logical viewport for automatic scaling.
+    SDL_RenderSetLogicalSize(renderer, screenbuffer->w, screenbuffer->h);
 
     SDL_LockSurface(screenbuffer);
     SDL_SetPaletteColors(screenbuffer->format->palette, ega_colors, 0, 16);
@@ -445,8 +453,9 @@ static void GetDestRect(SDL_Rect *rect)
     int w, h;
 
     SDL_GetRendererOutputSize(renderer, &w, &h);
-    rect->x = (w - screenbuffer->w) / 2;
-    rect->y = (h - screenbuffer->h) / 2;
+    // Set x and y to 0 due to SDL auto-centering.
+    rect->x = 0;
+    rect->y = 0;
     rect->w = screenbuffer->w;
     rect->h = screenbuffer->h;
 }

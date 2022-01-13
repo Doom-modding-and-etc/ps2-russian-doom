@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,13 +21,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/doomtype.h"
-#include "include/i_system.h"
-#include "include/m_misc.h"
-#include "include/net_defs.h"
-#include "include/net_loop.h"
-#include "include/net_packet.h"
-#include "include/jn.h"
+#include "doomtype.h"
+#include "i_system.h"
+#include "m_misc.h"
+#include "net_defs.h"
+#include "net_loop.h"
+#include "net_packet.h"
+#include "jn.h"
 
 #define MAX_QUEUE_SIZE 16
 

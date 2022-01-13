@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,12 +23,11 @@
 #include <string.h>
 #include <assert.h>
 
-#include "include/i_system.h"
-#include "include/doomtype.h"
-#include "include/i_swap.h"
-#include "include/midifile.h"
-#include "include/jn.h"
-#include "include/SDL/SDL_endian.h"
+#include "i_system.h"
+#include "doomtype.h"
+#include "i_swap.h"
+#include "midifile.h"
+#include "jn.h"
 
 #define HEADER_CHUNK_ID "MThd"
 #define TRACK_CHUNK_ID  "MTrk"
@@ -679,6 +678,21 @@ midi_file_t *MIDI_LoadFile(char *filename)
 unsigned int MIDI_NumTracks(midi_file_t *file)
 {
     return file->num_tracks;
+}
+
+// Get the number of events in a MIDI file.
+
+unsigned int MIDI_NumEvents(midi_file_t *file)
+{
+    int i;
+    unsigned int num_events = 0;
+
+    for (i = 0; i < file->num_tracks; ++i)
+    {
+        num_events += file->tracks[i].num_events;
+    }
+
+    return num_events;
 }
 
 // Start iterating over the events in a track.

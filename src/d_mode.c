@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,8 +20,8 @@
 
 
 
-#include "include/doomtype.h"
-#include "include/d_mode.h"
+#include "doomtype.h"
+#include "d_mode.h"
 
 // Valid game mode/mission combinations, with the number of
 // episodes/maps for each.

@@ -2,7 +2,7 @@
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
 // Copyright(C) 2006 Ben Ryves 2006
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,12 +21,12 @@
 
 #include <stdio.h>
 
-#include "include/doomtype.h"
-#include "include/i_swap.h"
+#include "doomtype.h"
+#include "i_swap.h"
 
-#include "include/memio.h"
-#include "include/mus2mid.h"
-#include "include/jn.h"
+#include "memio.h"
+#include "mus2mid.h"
+#include "jn.h"
 
 #define NUM_CHANNELS 16
 

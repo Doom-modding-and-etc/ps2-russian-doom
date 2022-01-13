@@ -1,7 +1,7 @@
 //
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,8 +21,8 @@
 
 #include <stdlib.h>
 
-#include "include/SDL/SDL.h"
-#include "include/SDL/SDL_opengl.h"
+#include "SDL.h"
+#include "SDL_opengl.h"
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
@@ -31,27 +31,26 @@
 #include <windows.h>
 #endif
 
-#include "include/icon.h"
-#include "include/config.h"
-#include "include/d_name.h"
-#include "include/d_loop.h"
-#include "include/deh_str.h"
-#include "include/doomtype.h"
-#include "include/i_controller.h"
-#include "include/i_input.h"
-#include "include/i_system.h"
-#include "include/i_timer.h"
-#include "include/i_video.h"
-#include "include/m_argv.h"
-#include "include/m_config.h"
-#include "include/m_misc.h"
-#include "include/tables.h"
-#include "include/v_diskicon.h"
-#include "include/v_video.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
-#include "include/crispy.h"
-#include "include/jn.h"
+#include "icon.h"
+#include "config.h"
+#include "d_name.h"
+#include "d_loop.h"
+#include "deh_str.h"
+#include "doomtype.h"
+#include "i_controller.h"
+#include "i_input.h"
+#include "i_system.h"
+#include "i_timer.h"
+#include "i_video.h"
+#include "m_argv.h"
+#include "m_config.h"
+#include "m_misc.h"
+#include "tables.h"
+#include "v_diskicon.h"
+#include "v_video.h"
+#include "w_wad.h"
+#include "z_zone.h"
+#include "jn.h"
 
 
 // These are (1) the window (or the full screen) that our game is rendered to
@@ -72,32 +71,11 @@ static char *window_title = "";
 // in turn is finally rendered to screen using "linear" scaling.
 
 static SDL_Surface *screenbuffer = NULL;
-static SDL_Surface *rgbabuffer = NULL;
+static SDL_Surface *argbbuffer = NULL;
 static SDL_Texture *texture = NULL;
 static SDL_Texture *texture_upscaled = NULL;
 
 static SDL_Rect blit_rect = {
-    0,
-    0,
-    SCREENWIDTH,
-    SCREENHEIGHT
-};
-
-static SDL_Rect w_blit_rect_16_9 = {
-    0,
-    0,
-    426 << hires,
-    SCREENHEIGHT
-};
-
-static SDL_Rect w_blit_rect_16_10 = {
-    0,
-    0,
-    384 << hires,
-    SCREENHEIGHT
-};
-
-static SDL_Rect w_blit_rect_21_9 = {
     0,
     0,
     WIDESCREENWIDTH,
@@ -152,9 +130,22 @@ int window_title_short = true;
 int window_width = SCREENWIDTH;
 int window_height = SCREENHEIGHT_4_3;
 
+typedef enum
+{
+    cs_WIDTH_AND_HEIGHT = 0,
+    cs_WIDTH,
+    cs_HEIGHT
+} changedSize_t;
+
+static changedSize_t changedWindowSize = cs_WIDTH_AND_HEIGHT;
+
 // Fullscreen mode, 0x0 for SDL_WINDOW_FULLSCREEN_DESKTOP.
 
 int fullscreen_width = 0, fullscreen_height = 0;
+
+// Maximum number of pixels to use for intermediate scale buffer.
+
+static int max_scaling_buffer_pixels = 16000000;
 
 // Run in full screen mode?  (int type for config code)
 
@@ -252,10 +243,61 @@ static boolean need_resize = false;
 static unsigned int last_resize_time;
 static int resize_delay = 70; // [JN] Redused from 500 to 70
 
-// Gamma correction level to use
-// [JN] Set default gamma to improved level 2.0.
+//
+// [JN] Brightness, gamma, saturtion and color intensity.
+//
 
-int usegamma = 4;
+float brightness = 1.0f;
+
+int  usegamma = 7;  // default gamma level is 0.85
+byte gammatable[18][256];
+
+float color_saturation = 1.0f;
+
+int show_palette = 1;
+
+float r_color_factor  = 1.0f;
+float g_color_factor  = 1.0f;
+float b_color_factor  = 1.0f;
+
+static const float gammalevels[18] =
+{
+    // Darker
+    0.50f, 0.55f, 0.60f, 0.65f, 0.70f, 0.75f, 0.80f, 0.85f, 0.90f,
+
+    // No gamma correction
+    1.0f,
+
+    // Lighter
+    1.125f, 1.25f, 1.375f, 1.5f, 1.625f, 1.75f, 1.875f, 2.0f,
+};
+
+// [JN] Text representation of values above.
+
+const char *gammalevel_names[] =
+{
+    // Darker
+    "0.50", "0.55", "0.60", "0.65", "0.70", "0.75", "0.80", "0.85", "0.90",
+
+    // No gamma correction
+    "1.00",
+
+    // Lighter
+    "1.125", "1.25", "1.375", "1.5", "1.625", "1.75", "1.875", "2.00",
+};
+
+const char *gammalevel_names_rus[] =
+{
+    // Darker
+    "0>50", "0>55", "0>60", "0>65", "0>70", "0>75", "0>80", "0>85", "0>90",
+
+    // No gamma correction
+    "1>00",
+
+    // Lighter
+    "1>125", "1>25", "1>375", "1>5", "1>625", "1>75", "1>875", "2>00",
+};
+
 
 void *I_GetSDLWindow(void)
 {
@@ -335,23 +377,28 @@ void I_ShutdownGraphics(void)
 {
     if (initialized)
     {
+        static int w, h;
+        
         SetShowCursor(true);
 
+        // [JN] Get screen width and height.
+        SDL_GetRendererOutputSize(renderer, &w, &h);
+
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
+
+        // [JN] Place mouse cursor to the center of the screen.
+        // Not safe for Mac retina displays, may cause a segfault.
+        #ifndef APPLE
+		if (fullscreen)
+		{
+            SDL_WarpMouseGlobal(w / 2, h / 2);
+        }
+        #endif
 
         initialized = false;
     }
 }
 
-
-
-//
-// I_StartFrame
-//
-// void I_StartFrame (void)
-// {
-//     // er?
-// }
 
 // Adjust window_width / window_height variables to be an an aspect
 // ratio consistent with the aspect_ratio_correct variable.
@@ -359,17 +406,28 @@ static void AdjustWindowSize(void)
 {
     if (aspect_ratio_correct || integer_scaling)
     {
-        if (window_width * actualheight <= window_height * screenwidth)
+        switch(changedWindowSize)
         {
-            // We round up window_height if the ratio is not exact; this leaves
-            // the result stable.
-            window_height = (window_width * actualheight + screenwidth - 1) / screenwidth;
-        }
-        else
-        {
-            window_width = window_height * screenwidth / actualheight;
+            case cs_WIDTH:
+                window_height = (window_width * actualheight + screenwidth - 1) / screenwidth;
+                break;
+            case cs_HEIGHT:
+                window_width = window_height * screenwidth / actualheight;
+                break;
+            default:
+                if(window_width * actualheight <= window_height * screenwidth)
+                {
+                    // We round up window_height if the ratio is not exact; this leaves
+                    // the result stable.
+                    window_height = (window_width * actualheight + screenwidth - 1) / screenwidth;
+                }
+                else
+                {
+                    window_width = window_height * screenwidth / actualheight;
+                }
         }
     }
+    changedWindowSize = cs_WIDTH_AND_HEIGHT;
 }
 
 static void HandleWindowEvent(SDL_WindowEvent *event)
@@ -390,6 +448,12 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
 
         case SDL_WINDOWEVENT_RESIZED:
             need_resize = true;
+            if(window_width == event->data1 && window_height != event->data2)
+                changedWindowSize = cs_HEIGHT;
+            else if(window_width != event->data1 && window_height == event->data2)
+                changedWindowSize = cs_WIDTH;
+            else
+                changedWindowSize = cs_WIDTH_AND_HEIGHT;
             last_resize_time = SDL_GetTicks();
             break;
 
@@ -438,6 +502,24 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
         default:
             break;
     }
+}
+
+// -----------------------------------------------------------------------------
+// HandleWindowResize
+// [JN] Updates window contents (SDL texture) on fly while resizing.
+// SDL_WINDOWEVENT_RESIZED from above is still needed to get rid of 
+// black borders after window size has been changed.
+// -----------------------------------------------------------------------------
+
+static int HandleWindowResize (void* data, SDL_Event *event) 
+{
+    if (event->type == SDL_WINDOWEVENT 
+    &&  event->window.event == SDL_WINDOWEVENT_RESIZED)
+    {
+        // Redraw window contents
+        I_FinishUpdate();
+    }
+    return 0;
 }
 
 // [JN] Alt + Return (the Enter key on main keyboard)
@@ -528,6 +610,8 @@ void I_GetEvent(void)
                 {
                     event_t event;
                     event.type = ev_quit;
+                    event.delayed = false;
+                    event.data1 = event.data2 = event.data3 = event.data4 = 0;
                     D_PostEvent(&event);
                 }
                 break;
@@ -564,15 +648,6 @@ void I_StartTic (void)
 
     I_UpdateController();
 }
-
-
-//
-// I_UpdateNoBlit
-//
-// void I_UpdateNoBlit (void)
-// {
-//     // what is this?
-// }
 
 static void UpdateGrab(void)
 {
@@ -612,11 +687,81 @@ static void UpdateGrab(void)
 
 }
 
+static void LimitTextureSize(int *w_upscale, int *h_upscale)
+{
+    SDL_RendererInfo rinfo;
+    int orig_w, orig_h;
+
+    orig_w = *w_upscale;
+    orig_h = *h_upscale;
+
+    // Query renderer and limit to maximum texture dimensions of hardware:
+    if (SDL_GetRendererInfo(renderer, &rinfo) != 0)
+    {
+        I_Error("CreateUpscaledTexture: SDL_GetRendererInfo() call failed: %s",
+                SDL_GetError());
+    }
+
+    while (*w_upscale * screenwidth > rinfo.max_texture_width)
+    {
+        --*w_upscale;
+    }
+    while (*h_upscale * SCREENHEIGHT > rinfo.max_texture_height)
+    {
+        --*h_upscale;
+    }
+
+    if ((*w_upscale < 1 && rinfo.max_texture_width > 0) ||
+        (*h_upscale < 1 && rinfo.max_texture_height > 0))
+    {
+        I_Error("CreateUpscaledTexture: Can't create a texture big enough for "
+                "the whole screen! Maximum texture size %dx%d",
+                rinfo.max_texture_width, rinfo.max_texture_height);
+    }
+
+    // We limit the amount of texture memory used for the intermediate buffer,
+    // since beyond a certain point there are diminishing returns. Also,
+    // depending on the hardware there may be performance problems with very
+    // huge textures, so the user can use this to reduce the maximum texture
+    // size if desired.
+
+    if (max_scaling_buffer_pixels < screenwidth * SCREENHEIGHT)
+    {
+        I_Error("CreateUpscaledTexture: max_scaling_buffer_pixels too small "
+                "to create a texture buffer: %d < %d",
+                max_scaling_buffer_pixels, screenwidth * SCREENHEIGHT);
+    }
+
+    while (*w_upscale * *h_upscale * screenwidth * SCREENHEIGHT
+           > max_scaling_buffer_pixels)
+    {
+        if (*w_upscale > *h_upscale)
+        {
+            --*w_upscale;
+        }
+        else
+        {
+            --*h_upscale;
+        }
+    }
+
+    if (*w_upscale != orig_w || *h_upscale != orig_h)
+    {
+        printf("CreateUpscaledTexture: Limited texture size to %dx%d "
+               "(max %d pixels, max texture size %dx%d)\n",
+               *w_upscale * screenwidth, *h_upscale * SCREENHEIGHT,
+               max_scaling_buffer_pixels,
+               rinfo.max_texture_width, rinfo.max_texture_height);
+    }
+}
+
 static void CreateUpscaledTexture(boolean force)
 {
     int w, h;
     int h_upscale, w_upscale;
     static int h_upscale_old, w_upscale_old;
+
+    SDL_Texture *new_texture, *old_texture;
 
     // Get the size of the renderer output. The units this gives us will be
     // real world pixels, which are not necessarily equivalent to the screen's
@@ -664,17 +809,7 @@ static void CreateUpscaledTexture(boolean force)
         h_upscale = 1;
     }
 
-    // Limit maximum texture dimensions to 1600x1200.
-    // It's really diminishing returns at this point.
-
-    if (w_upscale * screenwidth > 1600)
-    {
-        w_upscale = 1600 / screenwidth;
-    }
-    if (h_upscale * SCREENHEIGHT > 1200)
-    {
-        h_upscale = 1200 / SCREENHEIGHT;
-    }
+    LimitTextureSize(&w_upscale, &h_upscale);
 
     // Create a new texture only if the upscale factors have actually changed.
 
@@ -686,11 +821,6 @@ static void CreateUpscaledTexture(boolean force)
     h_upscale_old = h_upscale;
     w_upscale_old = w_upscale;
 
-    if (texture_upscaled)
-    {
-        SDL_DestroyTexture(texture_upscaled);
-    }
-
     // Set the scaling quality for rendering the upscaled texture to "linear",
     // which looks much softer and smoother than "nearest" but does a better
     // job at downscaling from the upscaled texture to screen.
@@ -698,11 +828,19 @@ static void CreateUpscaledTexture(boolean force)
     // [JN] smooting - функция и переменная незначительного сглаживания текстур.
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, smoothing ? "linear" : "nearest");
 
-    texture_upscaled = SDL_CreateTexture(renderer,
+    new_texture = SDL_CreateTexture(renderer,
                                 pixel_format,
                                 SDL_TEXTUREACCESS_TARGET,
                                 w_upscale*screenwidth,
                                 h_upscale*SCREENHEIGHT);
+
+    old_texture = texture_upscaled;
+    texture_upscaled = new_texture;
+
+    if (old_texture != NULL)
+    {
+        SDL_DestroyTexture(old_texture);
+    }
 }
 
 // [AM] Fractional part of the current tic, in the half-open
@@ -800,6 +938,22 @@ void I_FinishUpdate (void)
         return;
 #endif
 
+    // [crispy] variable rendering framerate
+    // [JN] Modified to have a variable FPS cap.
+    if (uncapped_fps && !singletics)
+    {
+        static int halftics_old;
+        int halftics;
+        extern int GetAdjustedTimeN (const int N);
+
+        while ((halftics = GetAdjustedTimeN(max_fps)) == halftics_old)
+        {
+            SDL_Delay(1);
+        }
+
+        halftics_old = halftics;
+    }
+
     // draws little dots on the bottom of the screen
 
     if (display_fps_dots)
@@ -816,6 +970,7 @@ void I_FinishUpdate (void)
     }
 
 	// [crispy] [AM] Real FPS counter
+    if (show_fps)
 	{
 		static int lastmili;
 		static int fpscount;
@@ -864,26 +1019,11 @@ void I_FinishUpdate (void)
     // Blit from the paletted 8-bit screen buffer to the intermediate
     // 32-bit RGBA buffer that we can load into the texture.
 
-    if (aspect_ratio == 0 || aspect_ratio == 1)
-    {
-        SDL_LowerBlit(screenbuffer, &blit_rect, rgbabuffer, &blit_rect);
-    }
-    else if (aspect_ratio == 2)
-    {
-        SDL_LowerBlit(screenbuffer, &w_blit_rect_16_9, rgbabuffer, &w_blit_rect_16_9);
-    }
-    else if (aspect_ratio == 3)
-    {
-        SDL_LowerBlit(screenbuffer, &w_blit_rect_16_10, rgbabuffer, &w_blit_rect_16_10);
-    }
-    else if (aspect_ratio == 4)
-    {
-        SDL_LowerBlit(screenbuffer, &w_blit_rect_21_9, rgbabuffer, &w_blit_rect_21_9);
-    }
+    SDL_LowerBlit(screenbuffer, &blit_rect, argbbuffer, &blit_rect);
 
     // Update the intermediate texture with the contents of the RGBA buffer.
 
-    SDL_UpdateTexture(texture, NULL, rgbabuffer->pixels, rgbabuffer->pitch);
+    SDL_UpdateTexture(texture, NULL, argbbuffer->pixels, argbbuffer->pitch);
 
     // Make sure the pillarboxes are kept clear each frame.
 
@@ -933,6 +1073,22 @@ void I_ReadScreen (byte* scr)
     memcpy(scr, I_VideoBuffer, screenwidth*SCREENHEIGHT*sizeof(*scr));
 }
 
+// -----------------------------------------------------------------------------
+// I_InitGammaTables
+// [JN] Initialize and generate gamma-correction levels.
+// Based on implementation from DOOM Retro.
+// -----------------------------------------------------------------------------
+
+static void I_InitGammaTables (void)
+{
+    for (int i = 0; i < 18; i++)
+    {
+        for (int j = 0; j < 256; j++)
+        {
+            gammatable[i][j] = (byte)(pow(j / 255.0, 1.0 / gammalevels[i]) * 255.0 + 0.5);
+        }
+    }
+}
 
 //
 // I_SetPalette
@@ -941,18 +1097,37 @@ void I_SetPalette (byte *doompalette)
 {
     int i;
 
-    // [JN] Check for incorrect gamma levels while startup
-    if (usegamma < 0 || usegamma > 17)
-    usegamma = 0;
+    // [JN] Safe-guard conditions to fix incorrect values:
+    if (brightness < 0) brightness = 0;
+    if (brightness > 1) brightness = 1;
+    
+    if (usegamma < 0) usegamma = 0;
+    if (usegamma > 17) usegamma = 17;
+    
+    if (color_saturation < 0) color_saturation = 0;
+    if (color_saturation > 1) color_saturation = 1;
+    
+    if (r_color_factor < 0) r_color_factor = 0;
+    if (r_color_factor > 1) r_color_factor = 1;
+    if (g_color_factor < 0) g_color_factor = 0;
+    if (g_color_factor > 1) g_color_factor = 1;
+    if (b_color_factor < 0) b_color_factor = 0;
+    if (b_color_factor > 1) b_color_factor = 1;
 
     for (i=0; i<256; ++i)
     {
-        // Zero out the bottom two bits of each channel - the PC VGA
-        // controller only supports 6 bits of accuracy.
+        // [JN] Extended palette values generation routine.
+        // Based on implementation from DOOM Retro.
+        byte    *gamma = gammatable[usegamma];
 
-        palette[i].r = gammatable[usegamma][*doompalette++] & ~3;
-        palette[i].g = gammatable[usegamma][*doompalette++] & ~3;
-        palette[i].b = gammatable[usegamma][*doompalette++] & ~3;
+        byte    r = gamma[*doompalette++];
+        byte    g = gamma[*doompalette++];
+        byte    b = gamma[*doompalette++];
+        double  p = sqrt(r * r * 0.299 + g * g * 0.587 + b * b * 0.114);
+
+        palette[i].r = (byte)((p + (r - p) * color_saturation) * r_color_factor ) * brightness;
+        palette[i].g = (byte)((p + (g - p) * color_saturation) * g_color_factor ) * brightness;
+        palette[i].b = (byte)((p + (b - p) * color_saturation) * b_color_factor ) * brightness;
     }
 
     palette_to_set = true;
@@ -1218,34 +1393,10 @@ static void CenterWindow(int *x, int *y, int w, int h)
 {
     SDL_Rect bounds;
 
-    // Check that video_display corresponds to a display that really exists,
-    // and if it doesn't, reset it.
-    if (video_display < 0 || video_display >= SDL_GetNumVideoDisplays())
-    {
-        if (english_language)
-        {
-            fprintf(stderr,
-                    "CenterWindow: We were configured to run on display #%d, but "
-                    "it no longer exists (max %d). Moving to display 0.\n",
-                    video_display, SDL_GetNumVideoDisplays() - 1);
-        }
-        else
-        {
-            fprintf(stderr,
-                    "CenterWindow: программа была настроена для запуска на "
-                    "мониторе #%d, он он более недоступен (max %d). Перемещение на "
-                    "монитор 0.\n",
-                    video_display, SDL_GetNumVideoDisplays() - 1);
-        }
-        video_display = 0;
-    }
-
     if (SDL_GetDisplayBounds(video_display, &bounds) < 0)
     {
-        fprintf(stderr, english_language ?
-                "CenterWindow: Failed to read display bounds for display #%d!\n" :
-                "CenterWindow: Ошибка обнаружения границ монитора #%d!\n",
-                video_display);
+        fprintf(stderr, "CenterWindow: Failed to read display bounds "
+                        "for display #%d!\n", video_display);
         return;
     }
 
@@ -1260,6 +1411,7 @@ static void SetVideoMode(void)
     unsigned int rmask, gmask, bmask, amask;
     int bpp;
     int window_flags = 0, renderer_flags = 0;
+    SDL_DisplayMode mode;
 
     w = window_width;
     h = window_height;
@@ -1271,6 +1423,15 @@ static void SetVideoMode(void)
     // Set the highdpi flag - this makes a big difference on Macs with
     // retina displays, especially when using small window sizes.
     window_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+
+#ifdef _WIN32
+    // [JN] Windows 11 idiocy. Indicate that window using OpenGL mode (while it's
+    // a Direct3D in fact), so SDL texture will not be freezed upon vsync toggling.
+    if (!force_software_renderer)
+    {
+        window_flags |= SDL_WINDOW_OPENGL;
+    }
+#endif
 
     if (fullscreen)
     {
@@ -1344,15 +1505,20 @@ static void SetVideoMode(void)
     // intermediate texture into the upscaled texture.
     renderer_flags = SDL_RENDERER_TARGETTEXTURE;
 
+    if (SDL_GetCurrentDisplayMode(video_display, &mode) != 0)
+    {
+        I_Error("Could not get display mode for video display #%d: %s",
+        video_display, SDL_GetError());
+    }
+
     // Turn on vsync if we aren't in a -timedemo
     // In -timedemo mode it's always disabled to get a maximum possible fps.
-    if (!singletics && vsync)
+    if (!singletics && mode.refresh_rate > 0)
     {
-        renderer_flags |= SDL_RENDERER_PRESENTVSYNC;
-    }
-    else
-    {
-        renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
+        if (vsync)
+        {
+            renderer_flags |= SDL_RENDERER_PRESENTVSYNC;
+        }
     }
 
     // [JN] Note: vsync is always disabled in software rendering mode.
@@ -1360,14 +1526,35 @@ static void SetVideoMode(void)
     {
         renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
         renderer_flags |= SDL_RENDERER_SOFTWARE;
+        vsync = false;
     }
 
     if (renderer != NULL)
     {
         SDL_DestroyRenderer(renderer);
+        // all associated textures get destroyed
+        texture = NULL;
+        texture_upscaled = NULL;
     }
 
     renderer = SDL_CreateRenderer(screen, -1, renderer_flags);
+
+    // If we could not find a matching render driver,
+    // try again without hardware acceleration.
+
+    if (renderer == NULL && !force_software_renderer)
+    {
+        renderer_flags |= SDL_RENDERER_SOFTWARE;
+        renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
+
+        renderer = SDL_CreateRenderer(screen, -1, renderer_flags);
+
+        // If this helped, save the setting for later.
+        if (renderer != NULL)
+        {
+            force_software_renderer = 1;
+        }
+    }
 
     if (renderer == NULL)
     {
@@ -1390,9 +1577,7 @@ static void SetVideoMode(void)
                              
     // Force integer scales for resolution-independent rendering.
     
-    #if SDL_VERSION_ATLEAST(2, 0, 5)
-        SDL_RenderSetIntegerScale(renderer, integer_scaling);
-    #endif
+    SDL_RenderSetIntegerScale(renderer, integer_scaling);
 
     // Blank out the full screen area in case there is any junk in
     // the borders that won't otherwise be overwritten.
@@ -1402,6 +1587,12 @@ static void SetVideoMode(void)
     SDL_RenderPresent(renderer);
 
     // Create the 8-bit paletted and the 32-bit RGBA screenbuffer surfaces.
+
+    if (screenbuffer != NULL)
+    {
+        SDL_FreeSurface(screenbuffer);
+        screenbuffer = NULL;
+    }
 
     if (screenbuffer == NULL)
     {
@@ -1413,14 +1604,21 @@ static void SetVideoMode(void)
 
     // Format of rgbabuffer must match the screen pixel format because we
     // import the surface data into the texture.
-    if (rgbabuffer == NULL)
+
+    if (argbbuffer != NULL)
+    {
+        SDL_FreeSurface(argbbuffer);
+        argbbuffer = NULL;
+    }
+
+    if (argbbuffer == NULL)
     {
         SDL_PixelFormatEnumToMasks(pixel_format, &bpp,
                                    &rmask, &gmask, &bmask, &amask);
-        rgbabuffer = SDL_CreateRGBSurface(0,
+        argbbuffer = SDL_CreateRGBSurface(0,
                                           screenwidth, SCREENHEIGHT, bpp,
                                           rmask, gmask, bmask, amask);
-        SDL_FillRect(rgbabuffer, NULL, 0);
+        SDL_FillRect(argbbuffer, NULL, 0);
     }
 
     if (texture != NULL)
@@ -1451,8 +1649,7 @@ static void SetVideoMode(void)
 void I_InitGraphics(void)
 {
     SDL_Event dummy;
-    byte *doompal1;
-    byte *doompal2;
+    byte *doompal;
     char *env;
 
     // Pass through the XSCREENSAVER_WINDOW environment variable to 
@@ -1473,6 +1670,20 @@ void I_InitGraphics(void)
     }
 
     SetSDLVideoDriver();
+
+    // [JN] Set an event watcher for window resize to allow
+    // update window contents on fly.
+    SDL_AddEventWatch(HandleWindowResize, screen);
+
+    // [JN] Set correct capped/uncapped mode at startup.
+    if (max_fps == 35)
+    {
+        uncapped_fps = 0;
+    }
+    else
+    {
+        uncapped_fps = 1;
+    }
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) 
     {
@@ -1499,6 +1710,10 @@ void I_InitGraphics(void)
     SDL_SetHintWithPriority(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS,
                             "1", SDL_HINT_OVERRIDE);
 
+    // [JN] Initialize and generate gamma-correction levels.
+
+    I_InitGammaTables();
+
     // Start with a clear black screen
     // (screen will be flipped after we set the palette)
 
@@ -1506,10 +1721,8 @@ void I_InitGraphics(void)
 
     // Set the palette
 
-    doompal1 = W_CacheLumpName(DEH_String("PALFIX"), PU_CACHE);
-    doompal2 = W_CacheLumpName(DEH_String("PLAYPAL"), PU_CACHE);
-    I_SetPalette(usegamma <= 8 ? doompal1 : doompal2);
-
+    doompal = W_CacheLumpName(DEH_String("PLAYPAL"), PU_CACHE);
+    I_SetPalette(doompal);
     SDL_SetPaletteColors(screenbuffer->format->palette, palette, 0, 256);
 
     // SDL2-TODO UpdateFocus();
@@ -1535,7 +1748,7 @@ void I_InitGraphics(void)
 
     // Clear the screen to black.
 
-    memset(I_VideoBuffer, 0, screenwidth * SCREENHEIGHT);
+    memset(I_VideoBuffer, 0, screenwidth * SCREENHEIGHT * sizeof(*I_VideoBuffer));
 
     // clear out any events waiting at the start and center the mouse
   
@@ -1554,33 +1767,22 @@ void I_ReInitGraphics (int reinit)
 		unsigned int rmask, gmask, bmask, amask;
 		int unused_bpp;
 
-        // [JN] Uhh... Needed?
-        /*
-		if (hires)
-		{
-			SCREENWIDTH = MAXWIDTH;
-			SCREENHEIGHT = MAXHEIGHT;
-			SCREENHEIGHT_4_3 = MAXHEIGHT_4_3;
-		}
-		else
-		{
-			SCREENWIDTH = ORIGWIDTH;
-			SCREENHEIGHT = ORIGHEIGHT;
-			SCREENHEIGHT_4_3 = ORIGHEIGHT_4_3;
-		}
-        */
-
 		// [crispy] re-initialize resolution-agnostic patch drawing
 		V_Init();
 
-		SDL_FreeSurface(rgbabuffer);
+		SDL_FreeSurface(screenbuffer);
+		screenbuffer = SDL_CreateRGBSurface(0,
+				                    screenwidth, SCREENHEIGHT, 8,
+				                    0, 0, 0, 0);
+
+		SDL_FreeSurface(argbbuffer);
 		SDL_PixelFormatEnumToMasks(pixel_format, &unused_bpp,
 		                           &rmask, &gmask, &bmask, &amask);
-		rgbabuffer = SDL_CreateRGBSurface(0,
+		argbbuffer = SDL_CreateRGBSurface(0,
 		                                  screenwidth, SCREENHEIGHT, 32,
 		                                  rmask, gmask, bmask, amask);
 
-		I_VideoBuffer = rgbabuffer->pixels;
+		I_VideoBuffer = screenbuffer->pixels;
 
 		V_RestoreBuffer();
 
@@ -1608,6 +1810,7 @@ void I_ReInitGraphics (int reinit)
 
 		SDL_DestroyRenderer(renderer);
 		renderer = SDL_CreateRenderer(screen, -1, flags);
+
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
 		// [crispy] the texture gets destroyed in SDL_DestroyRenderer(), force its re-creation
@@ -1738,13 +1941,13 @@ void I_BindVideoVariables(void)
     M_BindIntVariable("show_fps",                  &show_fps);
     M_BindIntVariable("aspect_ratio_correct",      &aspect_ratio_correct);
     M_BindIntVariable("smoothing",                 &smoothing);
+    M_BindIntVariable("max_fps",                   &max_fps);
     M_BindIntVariable("vga_porch_flash",           &vga_porch_flash);
     M_BindIntVariable("integer_scaling",           &integer_scaling);
     M_BindIntVariable("startup_delay",             &startup_delay);
     M_BindIntVariable("resize_delay",              &resize_delay);
     M_BindIntVariable("fullscreen_width",          &fullscreen_width);
     M_BindIntVariable("fullscreen_height",         &fullscreen_height);
-    M_BindIntVariable("force_software_renderer",   &force_software_renderer);
     M_BindIntVariable("window_title_short",        &window_title_short);
     M_BindIntVariable("window_width",              &window_width);
     M_BindIntVariable("window_height",             &window_height);
@@ -1753,7 +1956,15 @@ void I_BindVideoVariables(void)
     M_BindStringVariable("video_driver",           &video_driver);
     M_BindIntVariable("window_position_x",         &window_position_x);
     M_BindIntVariable("window_position_y",         &window_position_y);
-    M_BindIntVariable("usegamma",                  &usegamma);
     M_BindIntVariable("png_screenshots",           &png_screenshots);
+
+    // Color options
+    M_BindFloatVariable("brightness",              &brightness);
+    M_BindIntVariable("usegamma",                  &usegamma);
+    M_BindFloatVariable("color_saturation",        &color_saturation);
+    M_BindIntVariable("show_palette",              &show_palette);
+    M_BindFloatVariable("r_color_factor",          &r_color_factor);
+    M_BindFloatVariable("g_color_factor",          &g_color_factor);
+    M_BindFloatVariable("b_color_factor",          &b_color_factor);
 }
 

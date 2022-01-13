@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,14 +21,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/doomtype.h"
-#include "include/d_mode.h"
-#include "include/i_timer.h"
-#include "include/net_common.h"
-#include "include/net_io.h"
-#include "include/net_packet.h"
-#include "include/net_structrw.h"
-#include "include/jn.h"
+#include "doomtype.h"
+#include "d_mode.h"
+#include "i_timer.h"
+#include "net_common.h"
+#include "net_io.h"
+#include "net_packet.h"
+#include "net_structrw.h"
+#include "jn.h"
 
 // connections time out after 30 seconds
 

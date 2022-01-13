@@ -1,8 +1,8 @@
 //
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
-// Copyright(C) 2021 André Guilherme Mendes da luz bastos(Wolf3s)
+// Copyright(C) 2016-2022 Julian Nechaevsky
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -19,15 +19,15 @@
 
 
 
-#include "include/SDL/SDL.h"
-#include "include/SDL/SDL_keycode.h"
+#include "SDL.h"
+#include "SDL_keycode.h"
 
-#include "include/doomkeys.h"
-#include "include/doomtype.h"
-#include "include/d_event.h"
-#include "include/i_input.h"
-#include "include/m_argv.h"
-#include "include/m_config.h"
+#include "doomkeys.h"
+#include "doomtype.h"
+#include "d_event.h"
+#include "i_input.h"
+#include "m_argv.h"
+#include "m_config.h"
 
 static const int scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
 
@@ -297,6 +297,7 @@ void I_HandleKeyboardEvent(SDL_Event *sdlevent)
     // has terminated is undefined behaviour
     event_t event;
 
+    event.delayed = false;
     switch (sdlevent->type)
     {
         case SDL_KEYDOWN:
@@ -304,6 +305,7 @@ void I_HandleKeyboardEvent(SDL_Event *sdlevent)
             event.data1 = TranslateKey(&sdlevent->key.keysym);
             event.data2 = GetLocalizedKey(&sdlevent->key.keysym);
             event.data3 = GetTypedChar(&sdlevent->key.keysym);
+            event.data4 = 0;
 
             if (event.data1 != 0)
             {
@@ -321,8 +323,7 @@ void I_HandleKeyboardEvent(SDL_Event *sdlevent)
             // key releases it should do so based on data1
             // (key ID), not the printable char.
 
-            event.data2 = 0;
-            event.data3 = 0;
+            event.data2 = event.data3 = event.data4 = 0;
 
             if (event.data1 != 0)
             {
@@ -399,13 +400,14 @@ static void UpdateMouseButtonState(SDL_MouseButtonEvent *buttonEvent)
     }
 
     // Post an event
+    event.delayed = false;
     event.data1 = button;
     event.data2 = buttonEvent->x;
     event.data3 = buttonEvent->y;
+    event.data4 = 0;
     D_PostEvent(&event);
 }
 
-//Essa parte foi consertada antes tava zoada logo terá o suporte para o controle do ps2 :)
 static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
 {
     // SDL2 distinguishes button events from mouse wheel events.
@@ -413,40 +415,42 @@ static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
     // SDL1
     event_t up, down;
     int button;
-    int y, x;
-    unsigned char direction;
 
-    if(wheel > y)
+    if(wheel->y)
     {
-        button = MOUSE_SCROLL_UP + (wheel>y > 0 ? wheel>direction : !wheel>direction);
+        button = MOUSE_SCROLL_UP + (wheel->y > 0 ? wheel->direction : !wheel->direction);
 
         // post a button down event
         down.type = ev_mouse_keydown;
+        down.delayed = false;
         down.data1 = button;
-        down.data2 = down.data3 = 0;
+        down.data2 = down.data3 = down.data4 = 0;
         D_PostEvent(&down);
 
         // post a button up event
         up.type = ev_mouse_keyup;
+        up.delayed = true;
         up.data1 = button;
-        up.data2 = up.data3 = 0;
+        up.data2 = up.data3 = up.data4 = 0;
         D_PostEvent(&up);
     }
 
-    if(wheel>x)
+    if(wheel->x)
     {
-        button = MOUSE_SCROLL_RIGHT + (wheel>x > 0 ? wheel > direction : !wheel > direction);
+        button = MOUSE_SCROLL_RIGHT + (wheel->x > 0 ? wheel->direction : !wheel->direction);
 
         // post a button down event
         down.type = ev_mouse_keydown;
+        down.delayed = false;
         down.data1 = button;
-        down.data2 = down.data3 = 0;
+        down.data2 = down.data3 = down.data4 = 0;
         D_PostEvent(&down);
 
         // post a button up event
         up.type = ev_mouse_keyup;
+        up.delayed = true;
         up.data1 = button;
-        up.data2 = up.data3 = 0;
+        up.data2 = up.data3 = up.data4 = 0;
         D_PostEvent(&up);
     }
 }
@@ -497,6 +501,7 @@ void I_ReadMouse(void)
     if (x != 0 || y != 0) 
     {
         ev.type = ev_mouse_move;
+        ev.delayed = false;
         ev.data1 = mouse_button_state;
         ev.data2 = AccelerateMouse(x);
 
@@ -510,6 +515,7 @@ void I_ReadMouse(void)
             ev.data3 = 0;
         }
 
+        ev.data4 = 0;
         D_PostEvent(&ev);
     }
 }

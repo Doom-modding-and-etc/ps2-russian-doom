@@ -1,7 +1,7 @@
 //
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -24,16 +24,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/doomtype.h"
+#include "doomtype.h"
 
-#include "include/i_swap.h"
-#include "include/i_system.h"
-#include "include/i_video.h"
-#include "include/m_misc.h"
-#include "include/v_diskicon.h"
-#include "include/z_zone.h"
-#include "include/w_wad.h"
-#include "include/jn.h"
+#include "i_swap.h"
+#include "i_system.h"
+#include "i_video.h"
+#include "m_misc.h"
+#include "v_diskicon.h"
+#include "z_zone.h"
+#include "w_wad.h"
+#include "jn.h"
 
 typedef struct
 {
@@ -330,7 +330,7 @@ lumpindex_t W_CheckNumForName(char* name)
 // W_CheckMultipleLumps
 // Check if there's more than one of the same lump.
 //
-// [JN] Adaptaken from Doom Retro, thanks Brad Harding!
+// [JN] Adaptaken from DOOM Retro, thanks Brad Harding!
 //
 int W_CheckMultipleLumps(char *name)
 {

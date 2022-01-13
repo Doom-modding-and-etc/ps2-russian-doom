@@ -1,7 +1,7 @@
 //
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,17 +23,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/memio.h"
-#include "include/mus2mid.h"
-#include "include/deh_main.h"
-#include "include/i_sound.h"
-#include "include/i_swap.h"
-#include "include/m_misc.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
-#include "include/opl/opl.h"
-#include "include/midifile.h"
-#include "include/jn.h"
+#include "memio.h"
+#include "mus2mid.h"
+#include "deh_main.h"
+#include "i_sound.h"
+#include "i_swap.h"
+#include "m_misc.h"
+#include "w_wad.h"
+#include "z_zone.h"
+#include "opl.h"
+#include "midifile.h"
+#include "jn.h"
 
 // #define OPL_MIDI_DEBUG
 
@@ -633,11 +633,14 @@ static void InitVoices(void)
 static void SetChannelVolume(opl_channel_data_t *channel, unsigned int volume,
                              boolean clip_start);
 
-// Set music volume (0 - 127)
+// Set music volume (0 - 15)
 
 static void I_OPL_SetMusicVolume(int volume)
 {
     unsigned int i;
+
+    if(volume != 0)
+        volume = 52 + volume * 5; // volume must be <= 127! Otherwise, it will result in Array Index Out of Bounds
 
     if (current_music_volume == volume)
     {
@@ -1662,7 +1665,8 @@ static void *I_OPL_RegisterSong(void *data, int len)
 
     filename = M_TempFile("doom.mid");
 
-    if (IsMid(data, len) && len < MAXMIDLENGTH)
+    // [crispy] remove MID file size limit
+    if (IsMid(data, len) /* && len < MAXMIDLENGTH */)
     {
         M_WriteFile(filename, data, len);
     }
@@ -1726,7 +1730,7 @@ static void I_OPL_ShutdownMusic(void)
 
 static boolean I_OPL_InitMusic(void)
 {
-    char *dmxoption;
+    const char *dmxoption;
     opl_init_result_t chip_type;
 
     OPL_SetSampleRate(snd_samplerate);

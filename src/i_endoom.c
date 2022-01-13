@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,10 +21,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "include/config.h"
-#include "include/doomtype.h"
-#include "include/i_video.h"
-#include "include/jn.h"
+#include "config.h"
+#include "doomtype.h"
+#include "i_video.h"
+#include "jn.h"
 #include "txt_main.h"
 
 #define ENDOOM_W 80

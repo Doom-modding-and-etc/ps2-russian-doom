@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -24,12 +24,12 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "include/m_misc.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
-#include "include/deh_defs.h"
-#include "include/deh_io.h"
-#include "include/jn.h"
+#include "m_misc.h"
+#include "w_wad.h"
+#include "z_zone.h"
+#include "deh_defs.h"
+#include "deh_io.h"
+#include "jn.h"
 
 typedef enum
 {
@@ -181,9 +181,16 @@ int DEH_GetCharLump(deh_context_t *context)
 int DEH_GetChar(deh_context_t *context)
 {
     int result = 0;
+    boolean last_was_cr = false;
 
-    // Read characters, but ignore carriage returns
-    // Essentially this is a DOS->Unix conversion
+    // Track the current line number
+
+    if (context->last_was_newline)
+    {
+        ++context->linenum;
+    }
+
+    // Read characters, converting CRLF to LF
 
     do
     {
@@ -197,14 +204,26 @@ int DEH_GetChar(deh_context_t *context)
                 result = DEH_GetCharLump(context);
                 break;
         }
-    } while (result == '\r');
 
-    // Track the current line number
+        // Handle \r characters not paired with \n
+        if (last_was_cr && result != '\n')
+        {
+            switch (context->type)
+            {
+                case DEH_INPUT_FILE:
+                    ungetc(result, context->stream);
+                    break;
+                case DEH_INPUT_LUMP:
+                    --context->input_buffer_pos;
+                    break;
+            }
 
-    if (context->last_was_newline)
-    {
-        ++context->linenum;
-    }
+            return '\r';
+        }
+
+        last_was_cr = result == '\r';
+
+    } while (last_was_cr);
 
     context->last_was_newline = result == '\n';
 

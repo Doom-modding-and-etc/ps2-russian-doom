@@ -1,7 +1,7 @@
 //
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,18 +21,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/SDL/SDL_mixer.h"
+#include "SDL_mixer.h"
 
-#include "include/config.h"
-#include "include/doomfeatures.h"
-#include "include/doomtype.h"
+#include "config.h"
+#include "doomfeatures.h"
+#include "doomtype.h"
 
-#include "include/gusconf.h"
-#include "include/i_sound.h"
-#include "include/i_video.h"
-#include "include/m_argv.h"
-#include "include/m_config.h"
-#include "include/m_misc.h"
+#include "gusconf.h"
+#include "i_sound.h"
+#include "i_video.h"
+#include "m_argv.h"
+#include "m_config.h"
+#include "m_misc.h"
 
 // Sound sample rate to use for digital output (Hz)
 
@@ -84,6 +84,7 @@ extern int opl_io_port;
 
 // For native music module:
 
+extern char *fluidsynth_sf_path;
 extern char *timidity_cfg_path;
 
 // Compiled-in sound modules:
@@ -441,6 +442,7 @@ void I_BindSoundVariables(void)
     M_BindIntVariable("snd_pitchshift",          &snd_pitchshift);
     M_BindIntVariable("mute_inactive_window",    &mute_inactive_window);
 
+    M_BindStringVariable("fluidsynth_sf_path",   &fluidsynth_sf_path);
     M_BindStringVariable("timidity_cfg_path",    &timidity_cfg_path);
     M_BindStringVariable("gus_patch_path",     &gus_patch_path);
     M_BindIntVariable("gus_ram_kb",              &gus_ram_kb);

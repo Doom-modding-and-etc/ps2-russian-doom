@@ -1,5 +1,5 @@
 //
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 
 /* sha1.c - SHA1 hash function
@@ -42,8 +42,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "include/i_swap.h"
-#include "include/sha1.h"
+#include "i_swap.h"
+#include "sha1.h"
 
 void SHA1_Init(sha1_context_t *hd)
 {

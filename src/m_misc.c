@@ -2,7 +2,7 @@
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 1993-2008 Raven Software
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -40,19 +40,19 @@
 #include <sys/types.h>
 #endif
 
-#include "include/doomtype.h"
-#include "include/deh_str.h"
-#include "include/config.h"
-#include "include/i_swap.h"
-#include "include/i_system.h"
-#include "include/i_timer.h"
-#include "include/i_video.h"
-#include "include/m_argv.h"
-#include "include/m_misc.h"
-#include "include/v_video.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
-#include "include/jn.h"
+#include "doomtype.h"
+#include "deh_str.h"
+#include "config.h"
+#include "i_swap.h"
+#include "i_system.h"
+#include "i_timer.h"
+#include "i_video.h"
+#include "m_argv.h"
+#include "m_misc.h"
+#include "v_video.h"
+#include "w_wad.h"
+#include "z_zone.h"
+#include "jn.h"
 
 
 //
@@ -441,8 +441,8 @@ char *M_StringDuplicate(const char *orig)
     if (result == NULL)
     {
         I_Error(english_language ?
-                "Failed to duplicate string (length %" PRIuPTR ")\n" :
-                "Невозможно дублировать строку (длина %i" PRIuPTR ")\n",
+                "Failed to duplicate string (length %zu)\n" :
+                "Невозможно дублировать строку (длина %zu)\n",
                 strlen(orig));
     }
 
@@ -735,37 +735,22 @@ void M_NormalizeSlashes(char *str)
 //
 char* RD_M_FindInternalResource(char* resourceName)
 {
-    char* retVal = NULL;
-#ifdef _WIN32
+    char* retVal;
+#if defined(_WIN32) || defined(BUILD_PORTABLE)
     retVal = M_StringJoin(exedir, "base", DIR_SEPARATOR_S, resourceName, NULL);
+#elif defined(__APPLE__)
+    retVal = M_StringJoin(packageResourcesDir, resourceName, NULL);
+#else // Linux
+    retVal = M_StringJoin("/usr/local/share", DIR_SEPARATOR_S, PACKAGE_TARNAME, DIR_SEPARATOR_S, resourceName, NULL);
+#endif
     if(!M_FileExists(retVal))
     {
-#else
-    #ifdef DEV_ENV
-    retVal = M_StringJoin("base", DIR_SEPARATOR_S, resourceName, NULL);
-    if(!M_FileExists(retVal))
-    {
+        I_Error(english_language ?
+                "Internal resource \"%s\" not found!" :
+                "Внутренний ресурс \"%s\" не найден!",
+                retVal);
         free(retVal);
-    #endif
-    #ifdef __APPLE__
-        retVal = // TODO set canonical path for internal resources on MacOS
-        if(!M_FileExists(retVal))
-        {
-    #else // Linux
-        retVal = M_StringJoin("/usr/local/share", DIR_SEPARATOR_S, PACKAGE_TARNAME, DIR_SEPARATOR_S, resourceName, NULL);
-        if(!M_FileExists(retVal))
-        {
-    #endif
-#endif
-            I_Error(english_language ?
-                    "Internal resource \"%s\" not found!" :
-                    "Внутренний ресурс \"%s\" не найден!",
-                    retVal);
-            free(retVal);
-            return NULL;
-#if !defined(_WIN32) && defined(DEV_ENV)
-        }
-#endif
+        return NULL;
     }
     return retVal;
 }

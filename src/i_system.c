@@ -1,7 +1,7 @@
 //
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -33,21 +33,21 @@
 #include <unistd.h>
 #endif
 
-#include "include/SDL/SDL.h"
-#include "include/config.h"
-#include "include/deh_str.h"
-#include "include/doomtype.h"
-#include "include/d_name.h"
-#include "include/m_argv.h"
-#include "include/m_config.h"
-#include "include/m_misc.h"
-#include "include/i_sound.h"
-#include "include/i_timer.h"
-#include "include/i_video.h"
-#include "include/i_system.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
-#include "include/jn.h"
+#include "SDL.h"
+#include "config.h"
+#include "deh_str.h"
+#include "doomtype.h"
+#include "d_name.h"
+#include "m_argv.h"
+#include "m_config.h"
+#include "m_misc.h"
+#include "i_sound.h"
+#include "i_timer.h"
+#include "i_video.h"
+#include "i_system.h"
+#include "w_wad.h"
+#include "z_zone.h"
+#include "jn.h"
 
 // [JN] Объём необходимой памяти увеличен вдвое
 #define DEFAULT_RAM 16*2 /* MiB */
@@ -75,12 +75,6 @@ void I_AtExit(atexit_func_t func, boolean run_on_error)
     entry->run_on_error = run_on_error;
     entry->next = exit_funcs;
     exit_funcs = entry;
-}
-
-// Tactile feedback function, probably used for the Logitech Cyberman
-
-void I_Tactile(int on, int off, int total)
-{
 }
 
 // Zone memory auto-allocation function that allocates the zone size
@@ -311,8 +305,8 @@ void *I_Realloc(void *ptr, size_t size)
     if (size != 0 && new_ptr == NULL)
     {
         I_Error (english_language ?
-                 "I_Realloc: failed on reallocation of %" PRIuPTR " bytes" :
-                 "I_Realloc: ошибка переобнаружения %i байт",
+                 "I_Realloc: failed on reallocation of %zu bytes" :
+                 "I_Realloc: ошибка переобнаружения %zu байт",
                  size);
     }
 

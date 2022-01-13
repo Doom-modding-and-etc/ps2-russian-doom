@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,11 +23,11 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "include/doomtype.h"
-#include "include/deh_str.h"
-#include "include/m_misc.h"
-#include "include/z_zone.h"
-#include "include/jn.h"
+#include "doomtype.h"
+#include "deh_str.h"
+#include "m_misc.h"
+#include "z_zone.h"
+#include "jn.h"
 
 typedef struct 
 {

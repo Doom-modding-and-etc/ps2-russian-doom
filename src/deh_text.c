@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,13 +22,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/doomtype.h"
+#include "doomtype.h"
 
-#include "include/z_zone.h"
+#include "z_zone.h"
 
-#include "include/deh_defs.h"
-#include "include/deh_io.h"
-#include "include/deh_main.h"
+#include "deh_defs.h"
+#include "deh_io.h"
+#include "deh_main.h"
 
 // Given a string length, find the maximum length of a 
 // string that can replace it.

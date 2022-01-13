@@ -1,6 +1,6 @@
 //
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -18,18 +18,18 @@
 
 
 
-#include "include/SDL/SDL.h"
+#include "SDL.h"
 #include <string.h>
 
-#include "include/doomtype.h"
+#include "doomtype.h"
 
-#include "include/deh_str.h"
-#include "include/i_sound.h"
-#include "include/m_misc.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
+#include "deh_str.h"
+#include "i_sound.h"
+#include "m_misc.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
-#include "include/pcsound/pcsound.h"
+#include "pcsound.h"
 
 #define TIMER_FREQ 1193181 /* hz */
 

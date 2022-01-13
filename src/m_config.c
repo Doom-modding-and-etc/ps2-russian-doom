@@ -2,7 +2,7 @@
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 1993-2008 Raven Software
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,35 +26,42 @@
 #include <ctype.h>
 #include <assert.h>
 
-#include "include/SDL/SDL_filesystem.h"
+#include "SDL_filesystem.h"
 
-#include "include/config.h"
-#include "include/doomtype.h"
-#include "include/doomfeatures.h"
-#include "include/i_system.h"
-#include "include/m_argv.h"
-#include "include/m_misc.h"
-#include "include/jn.h"
+#include "config.h"
+#include "doomtype.h"
+#include "doomfeatures.h"
+#include "i_system.h"
+#include "m_argv.h"
+#include "m_config.h"
+#include "m_misc.h"
+#include "jn.h"
 
 #ifndef ___RD_TARGET_SETUP___
-    #include "include/rd_keybinds.h"
+    #include "rd_keybinds.h"
+    #include "i_controller.h"
 #endif
+
+typedef struct section_s
+{
+    struct section_s* next;
+    char* name;
+    sectionHandler_t* handler;
+} section_t;
+
+// Location where all configuration data is stored
+char *configdir, *configPath;
+
+static section_t* sections;
+
+// Default filenames for configuration files.
+static char *config_file_name;
 
 //
 // DEFAULTS
 //
 
-// Location where all configuration data is stored - 
-// default.ini, savegames, etc.
-
-char *configdir;
-
-// Default filenames for configuration files.
-
-// static char *default_main_config;
-static char *default_extra_config;
-
-typedef enum 
+typedef enum
 {
     DEFAULT_INT,
     DEFAULT_INT_HEX,
@@ -97,7 +104,6 @@ typedef struct
 {
     default_t *defaults;
     int numdefaults;
-    char *filename;
 } default_collection_t;
 
 #define CONFIG_VARIABLE_GENERIC(name, type) \
@@ -114,26 +120,7 @@ typedef struct
 
 //! @begin_config_file default
 
-// [JN] Все стандартное управление перенесено в
-// extra_defaults_list, что бы создать единый
-// конфигурационный файл для каждой игры.
-/*
-static default_t	doom_defaults_list[] =
-{
-    
-};
-*/
-
-static default_collection_t doom_defaults =
-{
-    // doom_defaults_list,
-    // arrlen(doom_defaults_list),
-    NULL,
-};
-
-//! @begin_config_file extended
-
-static default_t extra_defaults_list[] =
+static default_t defaults_list[] =
 {
     //!
     // [JN] Support for switching to the English language.
@@ -213,22 +200,6 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(use_controller),
-
-    CONFIG_VARIABLE_INT(controller_invert_move),
-
-    CONFIG_VARIABLE_INT(controller_invert_strafe),
-
-    CONFIG_VARIABLE_INT(controller_invert_turn),
-
-    CONFIG_VARIABLE_INT(controller_invert_vlook),
-
-    CONFIG_VARIABLE_INT(controller_bind_move),
-
-    CONFIG_VARIABLE_INT(controller_bind_strafe),
-
-    CONFIG_VARIABLE_INT(controller_bind_turn),
-
-    CONFIG_VARIABLE_INT(controller_bind_vlook),
 
     //!
     // @game strife
@@ -512,30 +483,6 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_INT(show_endoom),
 
     //!
-    // @game doom strife
-    //
-    // If non-zero, the Vanilla savegame limit is enforced; if the
-    // savegame exceeds 180224 bytes in size, the game will exit with
-    // an error.  If this has a value of zero, there is no limit to
-    // the size of savegames.
-    //
-
-    // [JN] Лимит отключен за неактуальностью.
-    // CONFIG_VARIABLE_INT(vanilla_savegame_limit),
-
-    //!
-    // @game doom strife
-    //
-    // If non-zero, the Vanilla demo size limit is enforced; the game
-    // exits with an error when a demo exceeds the demo size limit
-    // (128KiB by default).  If this has a value of zero, there is no
-    // limit to the size of demos.
-    // 
-
-    // [JN] Лимит отключен за неактуальностью.
-    // CONFIG_VARIABLE_INT(vanilla_demo_limit),
-
-    //!
     // If non-zero, the game behaves like Vanilla Doom, always assuming
     // an American keyboard mapping.  If this has a value of zero, the
     // native keyboard mapping of the keyboard is used.
@@ -571,24 +518,6 @@ static default_t extra_defaults_list[] =
 #ifdef FEATURE_SOUND
 
     //!
-    // Controls whether libsamplerate support is used for performing
-    // sample rate conversions of sound effects.  Support for this
-    // must be compiled into the program.
-    //
-    // If zero, libsamplerate support is disabled.  If non-zero,
-    // libsamplerate is enabled. Increasing values roughly correspond
-    // to higher quality conversion; the higher the quality, the
-    // slower the conversion process.  Linear conversion = 1;
-    // Zero order hold = 2; Fast Sinc filter = 3; Medium quality
-    // Sinc filter = 4; High quality Sinc filter = 5.
-    //
-
-    // [JN] Disable "use_libsamplerate" config variable,
-    // always preffering a best sound quality.
-
-    // CONFIG_VARIABLE_INT(use_libsamplerate),
-
-    //!
     // Scaling factor used by libsamplerate. This is used when converting
     // sounds internally back into integer form; normally it should not
     // be necessary to change it from the default value. The only time
@@ -599,6 +528,12 @@ static default_t extra_defaults_list[] =
     // possible without clipping occurring.
 
     CONFIG_VARIABLE_FLOAT(libsamplerate_scale),
+
+    //!
+    // Full path to a soundfont file to use with FluidSynth MIDI playback.
+    //
+
+    CONFIG_VARIABLE_STRING(fluidsynth_sf_path),
 
     //!
     // Full path to a Timidity configuration file to use for MIDI
@@ -635,7 +570,7 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_INT(uncapped_fps),
     CONFIG_VARIABLE_INT(show_fps),
     CONFIG_VARIABLE_INT(smoothing),
-    CONFIG_VARIABLE_INT(force_software_renderer),
+    CONFIG_VARIABLE_INT(max_fps),
     CONFIG_VARIABLE_INT(show_diskicon),
     CONFIG_VARIABLE_INT(screen_wiping),
     CONFIG_VARIABLE_INT(png_screenshots),
@@ -643,13 +578,22 @@ static default_t extra_defaults_list[] =
 
     // Display
     CONFIG_VARIABLE_INT(screenblocks),
-    CONFIG_VARIABLE_INT(usegamma),
     CONFIG_VARIABLE_INT(level_brightness),
     CONFIG_VARIABLE_INT(menu_shading),
     CONFIG_VARIABLE_INT(detaillevel),
     CONFIG_VARIABLE_INT(hud_detaillevel),
+
+    // Color options
+    CONFIG_VARIABLE_FLOAT(brightness),
+    CONFIG_VARIABLE_INT(usegamma),
+    CONFIG_VARIABLE_FLOAT(color_saturation),
+    CONFIG_VARIABLE_INT(show_palette),
+    CONFIG_VARIABLE_FLOAT(r_color_factor),
+    CONFIG_VARIABLE_FLOAT(g_color_factor),
+    CONFIG_VARIABLE_FLOAT(b_color_factor),
+    
     CONFIG_VARIABLE_INT(local_time),
-    CONFIG_VARIABLE_INT(show_messages), CONFIG_VARIABLE_INT(messageson),
+    CONFIG_VARIABLE_INT(show_messages),
     CONFIG_VARIABLE_INT(messages_alignment),
     CONFIG_VARIABLE_INT(messages_timeout),
     CONFIG_VARIABLE_INT(message_fade),
@@ -661,6 +605,7 @@ static default_t extra_defaults_list[] =
 
     // Automap specific variables
     CONFIG_VARIABLE_INT(automap_color),
+    CONFIG_VARIABLE_INT(automap_mark_color),
     CONFIG_VARIABLE_INT(automap_antialias),
     CONFIG_VARIABLE_INT(automap_stats),
     CONFIG_VARIABLE_INT(automap_level_time),
@@ -697,6 +642,7 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_INT(swirling_liquids),
     CONFIG_VARIABLE_INT(invul_sky),
     CONFIG_VARIABLE_INT(linear_sky),
+    CONFIG_VARIABLE_INT(randomly_flipcorpses),
     CONFIG_VARIABLE_INT(flip_weapons),
 
     // Gameplay: Status Bar
@@ -725,15 +671,16 @@ static default_t extra_defaults_list[] =
     // Gameplay: Tactical
     CONFIG_VARIABLE_INT(secret_notification),
     CONFIG_VARIABLE_INT(infragreen_visor),
+    CONFIG_VARIABLE_INT(horizontal_autoaim),
     CONFIG_VARIABLE_INT(show_all_artifacts),
     CONFIG_VARIABLE_INT(show_artifacts_timer),
 
     // Gameplay: Physical
+    CONFIG_VARIABLE_INT(improved_collision),
     CONFIG_VARIABLE_INT(over_under),
     CONFIG_VARIABLE_INT(torque),
     CONFIG_VARIABLE_INT(weapon_bobbing),
     CONFIG_VARIABLE_INT(ssg_blast_enemies),
-    CONFIG_VARIABLE_INT(randomly_flipcorpses),
     CONFIG_VARIABLE_INT(floating_powerups),
     CONFIG_VARIABLE_INT(toss_drop),
 
@@ -757,12 +704,52 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_INT(no_internal_demos),
 };
 
-static default_collection_t extra_defaults =
+static default_collection_t default_collection =
 {
-    extra_defaults_list,
-    arrlen(extra_defaults_list),
-    NULL,
+    defaults_list,
+    arrlen(defaults_list)
 };
+
+static void DefaultHandler_Save(FILE* file, char* sectionName);
+static void DefaultHandler_HandleLine(char* keyName, char *value, size_t valueSize);
+static boolean DefaultHandler_Handles(char* sectionName)
+{
+    return strcmp("General", sectionName) == 0;
+}
+
+static sectionHandler_t defaultHandler = {
+    DefaultHandler_Handles,
+    DefaultHandler_HandleLine,
+    DefaultHandler_Save,
+    NULL
+};
+#ifndef ___RD_TARGET_SETUP___
+static sectionHandler_t keybindsHandler = {
+    KeybindsHandler_Handles,
+    KeybindsHandler_HandleLine,
+    KeybindsHandler_Save,
+    NULL
+};
+
+sectionHandler_t controllerHandler = {
+    ControllerHandler_Handles,
+    ControllerHandler_HandleLine,
+    ControllerHandler_Save,
+    ControllerHandler_onFinishHandling
+};
+#endif
+static sectionHandler_t* handlers[] = {
+    &defaultHandler,
+#ifndef ___RD_TARGET_SETUP___
+    &keybindsHandler,
+    &controllerHandler
+#endif
+};
+#ifndef ___RD_TARGET_SETUP___
+static int handlersSize = 3;
+#else
+static int handlersSize = 1;
+#endif
 
 // Search a collection for a variable
 
@@ -781,66 +768,71 @@ static default_t *SearchCollection(default_collection_t *collection, char *name)
     return NULL;
 }
 
-static void SaveDefaultCollection(default_collection_t *collection)
+static void DefaultHandler_Save(FILE* file, char* sectionName)
 {
     default_t *defaults;
     int i;
-    FILE *f;
-	
-    f = fopen (collection->filename, "w");
-    if (!f)
-	return; // can't write the file, but don't complain
 
-    defaults = collection->defaults;
-		
-    for (i=0 ; i<collection->numdefaults ; i++)
+    defaults = default_collection.defaults;
+
+    for (i=0 ; i < default_collection.numdefaults ; i++)
     {
-        int chars_written;
-
         // Ignore unbound variables
-
         if (!defaults[i].bound)
         {
             continue;
         }
 
-        // Print the name and line up all values at 30 characters
-
-        chars_written = fprintf(f, "%s ", defaults[i].name);
-
-        for (; chars_written < 30; ++chars_written)
-            fprintf(f, " ");
-
-        // Print the value
-
+        // Print the name and the value
         switch (defaults[i].type) 
         {
             case DEFAULT_INT:
-	            fprintf(f, "%i", *defaults[i].location.i);
+	            fprintf(file, "%s = %i\n", defaults[i].name, *defaults[i].location.i);
                 break;
 
             case DEFAULT_INT_HEX:
-	            fprintf(f, "0x%x", *defaults[i].location.i);
+	            fprintf(file, "%s = 0x%x\n", defaults[i].name, *defaults[i].location.i);
                 break;
 
             case DEFAULT_FLOAT:
-                fprintf(f, "%f", *defaults[i].location.f);
+                fprintf(file, "%s = %f\n", defaults[i].name, *defaults[i].location.f);
                 break;
 
             case DEFAULT_STRING:
-	            fprintf(f,"\"%s\"", *defaults[i].location.s);
+	            fprintf(file, "%s = \"%s\"\n", defaults[i].name, *defaults[i].location.s);
                 break;
         }
+    }
+}
 
-        fprintf(f, "\n");
+static void SetVariable(default_t *def, char *value);
+
+static void DefaultHandler_HandleLine(char* keyName, char *value, size_t valueSize)
+{
+    default_t *def;
+
+    def = SearchCollection(&default_collection, keyName);
+    if(def == NULL || !def->bound)
+    {
+        // Unknown variable?  Unbound variables are also treated as unknown.
+        return;
     }
 
-    // [Dasperal] Key binds section
-#ifndef ___RD_TARGET_SETUP___
-    BK_SaveBindings(f);
-#endif
+    // Strip off trailing non-printable characters
+    while(strlen(value) > 0 && !isprint(value[strlen(value)-1]))
+    {
+        value[strlen(value)-1] = '\0';
+    }
 
-    fclose (f);
+    // Surrounded by quotes? If so, remove them.
+    if(strlen(value) >= 2
+    && value[0] == '"' && value[strlen(value) - 1] == '"')
+    {
+        value[strlen(value) - 1] = '\0';
+        memmove(value, value + 1, valueSize - 1);
+    }
+
+    SetVariable(def, value);
 }
 
 // Parses integer values in the configuration file
@@ -878,65 +870,49 @@ static void SetVariable(default_t *def, char *value)
     }
 }
 
-static void LoadDefaultCollection(default_collection_t *collection)
+static void LoadDefaultCollection(FILE *file)
 {
-    FILE *f;
     default_t *def;
     char defname[80];
     char strparm[100];
 
-    // read the file in, overriding any set defaults
-    f = fopen(collection->filename, "r");
-
-    if (f == NULL)
+    while(!feof(file))
     {
-        // File not opened, but don't complain. 
-        // It's probably just the first time they ran the game.
-
-        return;
-    }
-
-    while (!feof(f))
-    {
-        if (fscanf(f, "%79s %99[^\n]\n", defname, strparm) != 2)
+        if(fscanf(file, "%79s %99[^\n]\n", defname, strparm) != 2)
         {
             // This line doesn't match
-
             continue;
         }
 
         // [Dasperal] Key binds section
 #ifndef ___RD_TARGET_SETUP___
-        if (strcmp("Keybinds", defname) == 0 && strcmp("Start", strparm) == 0)
+        if(strcmp("Keybinds", defname) == 0 && strcmp("Start", strparm) == 0)
         {
-            BK_LoadBindings(f);
+            BK_LoadBindings(file);
             continue;
         }
 #endif
 
         // Find the setting in the list
+        def = SearchCollection(&default_collection, defname);
 
-        def = SearchCollection(collection, defname);
-
-        if (def == NULL || !def->bound)
+        if(def == NULL || !def->bound)
         {
             // Unknown variable?  Unbound variables are also treated
             // as unknown.
-
             continue;
         }
 
         // Strip off trailing non-printable characters (\r characters
         // from DOS text files)
-
-        while (strlen(strparm) > 0 && !isprint(strparm[strlen(strparm)-1]))
+        while(strlen(strparm) > 0 && !isprint(strparm[strlen(strparm)-1]))
         {
             strparm[strlen(strparm)-1] = '\0';
         }
 
         // Surrounded by quotes? If so, remove them.
-        if (strlen(strparm) >= 2
-         && strparm[0] == '"' && strparm[strlen(strparm) - 1] == '"')
+        if(strlen(strparm) >= 2
+        && strparm[0] == '"' && strparm[strlen(strparm) - 1] == '"')
         {
             strparm[strlen(strparm) - 1] = '\0';
             memmove(strparm, strparm + 1, sizeof(strparm) - 1);
@@ -944,120 +920,202 @@ static void LoadDefaultCollection(default_collection_t *collection)
 
         SetVariable(def, strparm);
     }
-
-    fclose (f);
 }
 
 // Set the default filenames to use for configuration files.
 
-void M_SetConfigFilenames(/*char *main_config, */char *extra_config)
+void M_SetConfigFilename(char *name)
 {
-    // default_main_config = main_config;
-    default_extra_config = extra_config;
+    config_file_name = name;
 }
 
 //
-// M_SaveDefaults
+// M_SaveConfig
 //
 
-void M_SaveDefaults (void)
+void M_SaveConfig (void)
 {
-    SaveDefaultCollection(&doom_defaults);
-    SaveDefaultCollection(&extra_defaults);
+    FILE *f;
+    section_t* section;
+
+    f = fopen(configPath, "w");
+    if(!f)
+        return; // can't write the file, but don't complain
+    section = sections;
+    while(section)
+    {
+        fprintf(f, "[%s]\n", section->name);
+        section->handler->save(f, section->name);
+        fprintf(f, "\n");
+        section = section->next;
+    }
+
+    fclose(f);
 }
 
 //
-// Save defaults to alternate filenames
+// Save default_collection to alternate filenames
 //
 
-void M_SaveDefaultsAlternate(char *main, char *extra)
+void M_SaveDefaultAlternate(char *main)
 {
     char *orig_main;
-    char *orig_extra;
 
     // Temporarily change the filenames
 
-    orig_main = doom_defaults.filename;
-    orig_extra = extra_defaults.filename;
+    orig_main = configPath;
 
-    doom_defaults.filename = main;
-    extra_defaults.filename = extra;
+    configPath = main;
 
-    M_SaveDefaults();
+    M_SaveConfig();
 
     // Restore normal filenames
 
-    doom_defaults.filename = orig_main;
-    extra_defaults.filename = orig_extra;
+    configPath = orig_main;
+}
+
+void M_AppendConfigSection(const char* sectionName, sectionHandler_t* handler)
+{
+    section_t* temp;
+
+    if(sections == NULL)
+    {
+        sections = malloc(sizeof(section_t));
+        sections->next = NULL;
+        sections->name = M_StringDuplicate(sectionName);
+        sections->handler = handler;
+    }
+    else
+    {
+        if(strcmp(sections->name, sectionName) == 0)
+            return;
+
+        temp = sections;
+        while(temp->next != NULL)
+        {
+            if(strcmp(temp->next->name, sectionName) == 0)
+                return;
+            temp = temp->next;
+        }
+        temp->next = malloc(sizeof(section_t));
+        temp->next->next = NULL;
+        temp->next->name = M_StringDuplicate(sectionName);
+        temp->next->handler = handler;
+    }
+}
+
+static void LoadSections(FILE *file)
+{
+    int i;
+    char sectionName[100];
+    char keyName[100];
+    char value[300];
+
+    while(!feof(file))
+    {
+        if(fscanf(file, "[%99[^]]]%*1[\n]", sectionName) == 1)
+        {
+            for(i = 0; i < handlersSize; ++i)
+            {
+                if(handlers[i]->handles(sectionName))
+                {
+                    printf(english_language ?
+                           "\tM_Config: Loading section \"%s\"\n" :
+                           "\tM_Config: Загрузка секции \"%s\"\n", sectionName);
+                    while(!feof(file))
+                    {
+                        if(fscanf(file, "%99[^\n =] = %299[^\n]%*1[\n]", keyName, value) != 2)
+                        {
+                            // Section end (empty line) of error
+                            break;
+                        }
+
+                        handlers[i]->handleLine(keyName, value, 300);
+                    }
+                    if(handlers[i]->onFinishHandling)
+                        handlers[i]->onFinishHandling();
+                    M_AppendConfigSection(sectionName, handlers[i]);
+                    break;
+                }
+            }
+            fscanf(file, "%*[^[]");
+        }
+        else
+        {
+            printf("\tM_Config: Error: Failed to load config\n");
+            break;
+        }
+    }
 }
 
 //
-// M_LoadDefaults
+// M_LoadConfig
 //
-
-void M_LoadDefaults (void)
+void M_LoadConfig(void)
 {
-    int i;
+    int i, c;
+    FILE* file;
  
     // check for a custom default file
 
     //!
     // @arg <file>
-    // @vanilla
     //
-    // Load main configuration from the specified file, instead of the
-    // default.
+    // Load configuration from the specified file, instead of the default
     //
-
     i = M_CheckParmWithArgs("-config", 1);
 
-    if (i)
+    if(i)
     {
-	doom_defaults.filename = myargv[i+1];
-	printf (english_language ?
-            "	default file: %s\n" :
-            "   файл конфигурации: %s\n",
-            doom_defaults.filename);
+        configPath = myargv[i + 1];
     }
     else
     {
-        doom_defaults.filename
-            = M_StringJoin(configdir, default_extra_config, NULL);
+        configPath = M_StringJoin(configdir, config_file_name, NULL);
     }
 
     printf(english_language ?
-           "saving config in %s\n" :
-           "Сохранение файла конфигурации:\n \t%s\n",
-           doom_defaults.filename);
+           "Loading config form %s\n" :
+           "Загрузка файла конфигурации:\n \t%s\n",
+           configPath);
 
-    //!
-    // @arg <file>
-    //
-    // Load additional configuration from the specified file, instead of
-    // the default.
-    //
-
-    i = M_CheckParmWithArgs("-extraconfig", 1);
-
-    if (i)
+    file = fopen(configPath, "r");
+    if(file == NULL)
     {
-        extra_defaults.filename = myargv[i+1];
-        printf(english_language ?
-               "        extra configuration file: %s\n" :
-               "        дополнительный файл конфигурации: %s\n", 
-               extra_defaults.filename);
+        // File not opened, but don't complain.
+        // It's probably just the first time they ran the game.
+        M_AppendConfigSection("General", &defaultHandler);
+#ifndef ___RD_TARGET_SETUP___
+        BK_ApplyDefaultBindings();
+        M_AppendConfigSection("Keybinds", &keybindsHandler);
+#endif
+        return;
+    }
+
+    c = fgetc(file);
+    fseek(file, -1, SEEK_CUR);
+    if(c != '[')
+    {
+        LoadDefaultCollection(file);
+        M_AppendConfigSection("General", &defaultHandler);
+#ifndef ___RD_TARGET_SETUP___
+        if(isBindsLoaded)
+            M_AppendConfigSection("Keybinds", &keybindsHandler);
+#endif
     }
     else
     {
-        extra_defaults.filename
-            = M_StringJoin(configdir, default_extra_config, NULL);
+        LoadSections(file);
     }
 
-    LoadDefaultCollection(&doom_defaults);
-    LoadDefaultCollection(&extra_defaults);
+    fclose(file);
+
 #ifndef ___RD_TARGET_SETUP___
     if(!isBindsLoaded)
+    {
         BK_ApplyDefaultBindings();
+        M_AppendConfigSection("Keybinds", &keybindsHandler);
+    }
 #endif
 }
 
@@ -1067,14 +1125,7 @@ static default_t *GetDefaultForName(char *name)
 {
     default_t *result;
 
-    // Try the main list and the extras
-
-    result = SearchCollection(&doom_defaults, name);
-
-    if (result == NULL)
-    {
-        result = SearchCollection(&extra_defaults, name);
-    }
+    result = SearchCollection(&default_collection, name);
 
     // Not found? Internal error.
 
@@ -1127,72 +1178,6 @@ void M_BindStringVariable(char *name, char **location)
     variable->bound = true;
 }
 
-// Set the value of a particular variable; an API function for other
-// parts of the program to assign values to config variables by name.
-
-boolean M_SetVariable(char *name, char *value)
-{
-    default_t *variable;
-
-    variable = GetDefaultForName(name);
-
-    if (variable == NULL || !variable->bound)
-    {
-        return false;
-    }
-
-    SetVariable(variable, value);
-
-    return true;
-}
-
-// Get the value of a variable.
-
-int M_GetIntVariable(char *name)
-{
-    default_t *variable;
-
-    variable = GetDefaultForName(name);
-
-    if (variable == NULL || !variable->bound
-     || (variable->type != DEFAULT_INT && variable->type != DEFAULT_INT_HEX))
-    {
-        return 0;
-    }
-
-    return *variable->location.i;
-}
-
-const char *M_GetStringVariable(char *name)
-{
-    default_t *variable;
-
-    variable = GetDefaultForName(name);
-
-    if (variable == NULL || !variable->bound
-     || variable->type != DEFAULT_STRING)
-    {
-        return NULL;
-    }
-
-    return *variable->location.s;
-}
-
-float M_GetFloatVariable(char *name)
-{
-    default_t *variable;
-
-    variable = GetDefaultForName(name);
-
-    if (variable == NULL || !variable->bound
-     || variable->type != DEFAULT_FLOAT)
-    {
-        return 0;
-    }
-
-    return *variable->location.f;
-}
-
 // Get the path to the default configuration dir to use, if NULL
 // is passed to M_SetConfigDir.
 
@@ -1200,7 +1185,7 @@ static char *GetDefaultConfigDir(void)
 {
     char *result;
     char* tempResult;
-#ifdef _WIN32
+#if defined(_WIN32) || defined(BUILD_PORTABLE)
     result = M_StringDuplicate(exedir);
     // [Dasperal] Try to check whether writing to exedir is possible by creating a savegames directory
     tempResult = M_StringJoin(result, "savegames", NULL);
@@ -1216,7 +1201,6 @@ static char *GetDefaultConfigDir(void)
     }
     free(tempResult);
 #else
-    #ifndef DEV_ENV
     tempResult = SDL_GetPrefPath("", PACKAGE_TARNAME); // This might be ~/.local/share/russian-doom
     if (tempResult != NULL)
     {
@@ -1225,9 +1209,6 @@ static char *GetDefaultConfigDir(void)
     }
     else
         result = M_StringDuplicate("");
-    #else
-    result = M_StringDuplicate("");
-    #endif
 #endif
     return result;
 }

@@ -1,7 +1,7 @@
 //
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -24,29 +24,29 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "include/SDL/SDL.h"
-#include "include/SDL/SDL_mixer.h"
+#include "SDL.h"
+#include "SDL_mixer.h"
 
-#include "include/i_midipipe.h"
+#include "i_winmusic.h"
 
-#include "include/config.h"
-#include "include/doomtype.h"
-#include "include/memio.h"
-#include "include/mus2mid.h"
+#include "config.h"
+#include "doomtype.h"
+#include "memio.h"
+#include "mus2mid.h"
 
-#include "include/deh_str.h"
-#include "include/gusconf.h"
-#include "include/i_sound.h"
-#include "include/i_system.h"
-#include "include/i_swap.h"
-#include "include/m_argv.h"
-#include "include/m_config.h"
-#include "include/m_misc.h"
-#include "include/sha1.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
+#include "deh_str.h"
+#include "gusconf.h"
+#include "i_sound.h"
+#include "i_system.h"
+#include "i_swap.h"
+#include "m_argv.h"
+#include "m_config.h"
+#include "m_misc.h"
+#include "sha1.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
-#define MAXMIDLENGTH (96 * 1024)
+#include "jn.h"
 
 static boolean music_initialized = false;
 
@@ -54,10 +54,15 @@ static boolean music_initialized = false;
 // responsibility to shut it down
 
 static boolean sdl_was_initialized = false;
+#ifdef _WIN32
+static boolean win_midi_stream_opened = false;
+#endif
+static boolean win_midi_song_registered = false;
 
 static boolean musicpaused = false;
 static int current_music_volume;
 
+char *fluidsynth_sf_path = "";
 char *timidity_cfg_path = "";
 
 static char *temp_timidity_cfg = NULL;
@@ -77,22 +82,49 @@ static boolean WriteWrapperTimidityConfig(char *write_path)
         return false;
     }
 
+    printf(english_language ?
+           "I_SDLMusic: Using Timidity config from:\n \t%s\n" :
+           "I_SDLMusic: Используется Timidity конфиг из файла:\n \t%s\n",
+           timidity_cfg_path);
+#ifndef RD_BUILD_HAS_SDL_MIXER_PATCH
+    if(strchr(timidity_cfg_path, ' '))
+    {
+        printf(english_language ?
+               "\tError: The path contains spaces, which are not allowed\n" :
+               "\tОшибка: Путь содержит пробелы, что недопустимо\n");
+    }
+#endif
     fstream = fopen(write_path, "w");
 
     if (fstream == NULL)
     {
+        printf(english_language ?
+               "Error: Could not write Timidity config\n" :
+               "Ошибка: Не удалось записать конфигурацию Timidity\n");
         return false;
     }
 
     path = M_DirName(timidity_cfg_path);
+#ifdef RD_BUILD_HAS_SDL_MIXER_PATCH
+    fprintf(fstream, "dir \"%s\"\n", path);
+#else
     fprintf(fstream, "dir %s\n", path);
+#endif
     free(path);
 
+#ifdef RD_BUILD_HAS_SDL_MIXER_PATCH
+    fprintf(fstream, "source \"%s\"\n", timidity_cfg_path);
+#else
     fprintf(fstream, "source %s\n", timidity_cfg_path);
+#endif
     fclose(fstream);
 
     return true;
 }
+
+// putenv requires a non-const string whose lifetime is the whole program
+// so can't use a string directly, have to do this silliness
+static char sdl_mixer_disable_fluidsynth[] = "SDL_MIXER_DISABLE_FLUIDSYNTH=1";
 
 void I_InitTimidityConfig(void)
 {
@@ -123,7 +155,7 @@ void I_InitTimidityConfig(void)
         // timidity_cfg_path or GUS mode), then disable Fluidsynth, because
         // SDL_mixer considers Fluidsynth a higher priority than Timidity and
         // therefore can end up circumventing Timidity entirely.
-        putenv("SDL_MIXER_DISABLE_FLUIDSYNTH=1");
+        putenv(sdl_mixer_disable_fluidsynth);
     }
     else
     {
@@ -150,7 +182,11 @@ static void I_SDL_ShutdownMusic(void)
     if (music_initialized)
     {
 #if defined(_WIN32)
-        I_MidiPipe_ShutdownServer();
+        if (win_midi_stream_opened)
+        {
+            I_WIN_ShutdownMusic();
+			win_midi_stream_opened = false;
+        }
 #endif
         Mix_HaltMusic();
         music_initialized = false;
@@ -215,6 +251,26 @@ static boolean I_SDL_InitMusic(void)
 
     RemoveTimidityConfig();
 
+    // When using FluidSynth, proceed to set the soundfont path via
+    // Mix_SetSoundFonts if necessary.
+
+    if (snd_musicdevice != SNDDEVICE_GUS && strlen(fluidsynth_sf_path) > 0 && strlen(timidity_cfg_path) == 0)
+    {
+        printf(english_language ?
+               "I_SDLMusic: Using FluidSynth soundfont from:\n \t%s\n" :
+               "I_SDLMusic: Используется FluidSynth soundfont из файла:\n \t%s\n",
+               fluidsynth_sf_path);
+
+        Mix_SetSoundFonts(fluidsynth_sf_path);
+    }
+
+    if(snd_musicdevice != SNDDEVICE_GUS && strlen(fluidsynth_sf_path) == 0 && strlen(timidity_cfg_path) == 0)
+    {
+        printf(english_language ?
+               "I_SDLMusic: Using SDL-defined MIDI backend\n" :
+               "I_SDLMusic: Используется определённый SDL бэкэнд MIDI\n");
+    }
+
     // If snd_musiccmd is set, we need to call Mix_SetMusicCMD to
     // configure an external music playback program.
 
@@ -224,11 +280,10 @@ static boolean I_SDL_InitMusic(void)
     }
 
 #if defined(_WIN32)
-    // [AM] Start up midiproc to handle playing MIDI music.
     // [JN] Don't enable it for GUS, since it handles its own volume just fine.
-    if (snd_musicdevice != SNDDEVICE_GUS)
+    if (snd_musicdevice != SNDDEVICE_GUS && strlen(timidity_cfg_path) == 0)
     {
-        I_MidiPipe_InitServer();
+        win_midi_stream_opened = I_WIN_InitMusic();
     }
 #endif
 
@@ -254,18 +309,29 @@ static void UpdateMusicVolume(void)
     }
 
 #if defined(_WIN32)
-    I_MidiPipe_SetVolume(vol);
+    I_WIN_SetMusicVolume(vol);
 #endif
     Mix_VolumeMusic(vol);
 }
 
-// Set music volume (0 - 127)
+// Set music volume (0 - 15)
 
 static void I_SDL_SetMusicVolume(int volume)
 {
     // Internal state variable.
-    current_music_volume = volume;
-
+#ifdef _WIN32
+    if (snd_musicdevice != SNDDEVICE_GUS && strlen(timidity_cfg_path) == 0)
+        current_music_volume = 40 + volume * 5;
+    else
+    {
+#endif
+        if(volume == 0)
+            current_music_volume = 0;
+        else
+            current_music_volume = 2 + volume * 2;
+#ifdef _WIN32
+    }
+#endif
     UpdateMusicVolume();
 }
 
@@ -280,7 +346,7 @@ static void I_SDL_PlaySong(void *handle, boolean looping)
         return;
     }
 
-    if (handle == NULL && !midi_server_registered)
+    if (handle == NULL && !win_midi_song_registered)
     {
         return;
     }
@@ -295,9 +361,9 @@ static void I_SDL_PlaySong(void *handle, boolean looping)
     }
 
 #if defined(_WIN32)
-    if (midi_server_registered)
+    if (win_midi_song_registered)
     {
-        I_MidiPipe_PlaySong(loops);
+        I_WIN_PlaySong(looping);
     }
     else
 #endif
@@ -338,9 +404,9 @@ static void I_SDL_StopSong(void)
     }
 
 #if defined(_WIN32)
-    if (midi_server_registered)
+    if (win_midi_song_registered)
     {
-        I_MidiPipe_StopSong();
+        I_WIN_StopSong();
     }
     else
 #endif
@@ -359,9 +425,10 @@ static void I_SDL_UnRegisterSong(void *handle)
     }
 
 #if defined(_WIN32)
-    if (midi_server_registered)
+    if (win_midi_song_registered)
     {
-        I_MidiPipe_UnregisterSong();
+        I_WIN_UnRegisterSong();
+		win_midi_song_registered = false;
     }
     else
 #endif
@@ -374,14 +441,17 @@ static void I_SDL_UnRegisterSong(void *handle)
 }
 
 // Determine whether memory block is a .mid file 
-
-// [crispy] Reverse Choco's logic from "if (MIDI)" to "if (not MUS)"
-/*
+#if defined(_WIN32)
 static boolean IsMid(byte *mem, int len)
 {
     return len > 4 && !memcmp(mem, "MThd", 4);
 }
-*/
+#endif
+
+static boolean IsMus(byte *mem, int len)
+{
+    return len > 4 && !memcmp(mem, "MUS\x1a", 4);
+}
 
 static boolean ConvertMus(byte *musdata, int len, const char *filename)
 {
@@ -430,7 +500,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
 /*
     if (IsMid(data, len) && len < MAXMIDLENGTH)
 */
-    if (len < 4 || memcmp(data, "MUS\x1a", 4)) // [crispy] MUS_HEADER_MAGIC
+    if (!IsMus(data, len)) // [crispy] MUS_HEADER_MAGIC
     {
         M_WriteFile(filename, data, len);
     }
@@ -446,15 +516,19 @@ static void *I_SDL_RegisterSong(void *data, int len)
     // we have to generate a temporary file.
 
 #if defined(_WIN32)
-    // [AM] If we do not have an external music command defined, play
-    //      music with the MIDI server.
-    if (midi_server_initialized)
+    // If we do not have an external music command defined, play
+    // music with the Windows native MIDI.
+    if (win_midi_stream_opened && (IsMus(data, len) || IsMid(data, len)))
     {
-        music = NULL;
-        if (!I_MidiPipe_RegisterSong(filename))
+        if (I_WIN_RegisterSong(filename))
         {
-            fprintf(stderr, "Error loading midi: %s\n",
-                "Could not communicate with midiproc.");
+            music = (void *) 1;
+			win_midi_song_registered = true;
+        }
+        else
+        {
+            music = NULL;
+            fprintf(stderr, "Error loading midi: Failed to register song.\n");
         }
     }
     else

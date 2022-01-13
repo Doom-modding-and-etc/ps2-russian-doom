@@ -2,7 +2,7 @@
 // Copyright(C) 1993-1996 Id Software, Inc.
 // Copyright(C) 2005-2014 Simon Howard
 // Copyright(C) 2008 David Flater
-// Copyright(C) 2016-2021 Julian Nechaevsky
+// Copyright(C) 2016-2022 Julian Nechaevsky
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,29 +20,29 @@
 
 
 
-#include "include/config.h"
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "include/SDL/SDL.h"
-#include "include/SDL/SDL_mixer.h"
+#include "SDL.h"
+#include "SDL_mixer.h"
 
 #ifdef HAVE_LIBSAMPLERATE
 #include <samplerate.h>
 #endif
 
-#include "include/deh_str.h"
-#include "include/i_sound.h"
-#include "include/i_system.h"
-#include "include/i_swap.h"
-#include "include/m_argv.h"
-#include "include/m_misc.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
-#include "include/doomtype.h"
-#include "include/jn.h"
+#include "deh_str.h"
+#include "i_sound.h"
+#include "i_system.h"
+#include "i_swap.h"
+#include "m_argv.h"
+#include "m_misc.h"
+#include "w_wad.h"
+#include "z_zone.h"
+#include "doomtype.h"
+#include "jn.h"
 
 #define LOW_PASS_FILTER
 //#define DEBUG_DUMP_WAVS

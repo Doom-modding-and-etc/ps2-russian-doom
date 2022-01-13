@@ -1,5 +1,5 @@
 //
-// Copyright(C) 2021 Dasperal
+// Copyright(C) 2021-2022 Dasperal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,14 +12,14 @@
 // GNU General Public License for more details.
 //
 
-#include "include/rd_text.h"
+#include "rd_text.h"
 
-#include "include/d_name.h"
-#include "include/i_swap.h"
-#include "include/v_patch.h"
-#include "include/v_video.h"
-#include "include/w_wad.h"
-#include "include/z_zone.h"
+#include "d_name.h"
+#include "i_swap.h"
+#include "v_patch.h"
+#include "v_video.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
 Translation_CR_t messages_pickup_color_set;
 Translation_CR_t messages_secret_color_set;
@@ -278,6 +278,31 @@ void RD_M_DrawTextSmallENG(char *text, int x, int y, Translation_CR_t translatio
     }
 }
 
+/** [JN] Returns the pixel width of a string using unreplaceable small English font*/
+int RD_M_TextSmallENGWidth(char *text)
+{
+    char c;
+    int width;
+    patch_t *p;
+
+    width = 0;
+    while ((c = *text++) != 0)
+    {
+        if (c < 33)
+        {
+            width += (RD_GameType == gt_Doom ? 4 : 5);
+        }
+        else
+        {
+            c = toupper(c);
+            // [Dasperal] Use PU_STATIC for Doom because of Doom's font system
+            p = W_CacheLumpNum(smallEngFont + c - 33, RD_GameType == gt_Doom ? PU_STATIC : PU_CACHE);
+            width += SHORT(p->width) - (RD_GameType == gt_Doom ? 0 : 1);
+        }
+    }
+    return (width);
+}
+
 /** [JN] Draw text string with unreplaceable big English font*/
 void RD_M_DrawTextBigENG(char *text, int x, int y)
 {
@@ -399,7 +424,16 @@ void RD_M_DrawTextSmallRUSFade(char *text, int x, int y, byte *table)
             c = toupper(c);
             // [Dasperal] Use PU_STATIC for Doom because of Doom's font system
             p = W_CacheLumpNum(smallRusFont + c - 33, RD_GameType == gt_Doom ? PU_STATIC : PU_CACHE);
-            V_DrawFadePatch(cx, cy, p, table);
+            if (table)
+            {
+                V_DrawFadePatch(cx, cy, p, table);
+            }
+            else
+            {
+                // [JN] Draw as opaque if NULL table given.
+                drawShadowedPatch(cx, cy, p);
+            }
+            
             cx += SHORT(p->width) - (RD_GameType == gt_Doom ? 0 : 1);
         }
     }
